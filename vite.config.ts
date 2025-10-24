@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/react-app/', // Replace 'react-app' with your actual repository name
+  base: '/GENAI-webhosting/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
