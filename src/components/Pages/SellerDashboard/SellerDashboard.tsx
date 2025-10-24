@@ -103,7 +103,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     },
     {
       id: "products",
-      label: "產品管理",
+      label: "廢料管理",
       icon: "fas fa-box",
     },
     {
@@ -243,10 +243,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       case "products":
         return (
           <div className="p-4">
-            <h3 className="mb-4">產品管理</h3>
+            <h3 className="mb-4">廢料管理</h3>
             <div className="mb-3">
               <button className="btn btn-success" onClick={handleAddProduct}>
-                新增產品
+                創造請求
               </button>
             </div>
 

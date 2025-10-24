@@ -67,7 +67,7 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
 
   return (
     <div className="p-4">
-      <h3 className="mb-4">新增產品</h3>
+      <h3 className="mb-4">創造請求</h3>
 
       {error && (
         <div className="alert alert-danger" role="alert">
