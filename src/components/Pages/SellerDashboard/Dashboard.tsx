@@ -113,7 +113,7 @@ function Dashboard({ user }: DashboardProps) {
             <div className="card-body">
               <div className="d-flex justify-content-between">
                 <div>
-                  <h5 className="card-title">總產品</h5>
+                  <h5 className="card-title">總廢料</h5>
                   <h2 className="mb-0">{stats.totalProducts}</h2>
                 </div>
                 <div className="align-self-center">

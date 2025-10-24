@@ -124,8 +124,8 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
       return "我很樂意幫助你！請告訴我你遇到的具體問題，我會盡力為你提供解決方案。";
     }
 
-    if (lowerMessage.includes("產品") || lowerMessage.includes("product")) {
-      return "關於產品相關的問題，我可以為你提供詳細的資訊和建議。請告訴我你對哪個產品感興趣？";
+    if (lowerMessage.includes("廢料") || lowerMessage.includes("product")) {
+      return "關於廢料相關的問題，我可以為你提供詳細的資訊和建議。請告訴我你對哪個廢料感興趣？";
     }
 
     if (lowerMessage.includes("訂單") || lowerMessage.includes("order")) {
@@ -133,15 +133,15 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
     }
 
     if (lowerMessage.includes("價格") || lowerMessage.includes("price")) {
-      return "關於價格資訊，我可以為你提供最新的報價。請告訴我你感興趣的產品，我會為你查詢價格。";
+      return "關於價格資訊，我可以為你提供最新的報價。請告訴我你感興趣的廢料，我會為你查詢價格。";
     }
 
     if (lowerMessage.includes("賣家") || lowerMessage.includes("seller")) {
-      return "我可以幫你找到合適的賣家。請告訴我你需要什麼類型的產品或服務？";
+      return "我可以幫你找到合適的賣家。請告訴我你需要什麼類型的廢料或服務？";
     }
 
     if (lowerMessage.includes("買家") || lowerMessage.includes("buyer")) {
-      return "我可以幫你找到潛在的買家。請告訴我你銷售什麼產品？";
+      return "我可以幫你找到潛在的買家。請告訴我你銷售什麼廢料？";
     }
 
     if (lowerMessage.includes("回收") || lowerMessage.includes("recycle")) {
