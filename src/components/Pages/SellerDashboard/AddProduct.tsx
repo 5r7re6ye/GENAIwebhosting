@@ -45,7 +45,7 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
       setError("");
 
       // Show success message
-      alert("產品已成功儲存！");
+      alert("廢料已成功儲存！");
 
       // Call success callback
       onSuccess();
@@ -81,14 +81,14 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="form-label">產品名稱</label>
+                  <label className="form-label">廢料名稱</label>
 
                   <input
                     type="text"
                     className="form-control"
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
-                    placeholder="請輸入產品名稱"
+                    placeholder="請輸入廢料名稱"
                     disabled={isLoading}
                   />
                 </div>
@@ -130,7 +130,7 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                     onClick={handleSaveProduct}
                     disabled={isLoading}
                   >
-                    {isLoading ? "儲存中..." : "儲存產品"}
+                    {isLoading ? "儲存中..." : "儲存廢料"}
                   </button>
                   <button
                     type="button"

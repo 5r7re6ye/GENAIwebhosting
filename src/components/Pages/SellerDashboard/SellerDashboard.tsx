@@ -150,7 +150,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
   ) => {
     // Show confirmation dialog
     const confirmed = window.confirm(
-      `確定要刪除產品 "${productName}" 嗎？\n\n此操作無法復原！`
+      `確定要刪除廢料 "${productName}" 嗎？\n\n此操作無法復原！`
     );
 
     if (!confirmed) {
@@ -164,7 +164,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       // Delete product from Firestore
       await deleteDoc(doc(db, "products", productId));
       console.log("Product deleted successfully");
-      showAlert("產品已成功刪除！", "success");
+      showAlert("廢料已成功刪除！", "success");
     } catch (error: any) {
       console.error("Error deleting product: ", error);
       setError("刪除失敗: " + error.message);
@@ -218,7 +218,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       });
 
       setEditingProduct(null);
-      showAlert("產品已成功更新！", "success");
+      showAlert("廢料已成功更新！", "success");
     } catch (error: any) {
       console.error("Error updating product:", error);
       setError("更新失敗: " + error.message);
@@ -260,12 +260,12 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
             {editingProduct && (
               <div className="card mb-4">
                 <div className="card-header">
-                  <h5 className="mb-0">編輯產品</h5>
+                  <h5 className="mb-0">編輯廢料</h5>
                 </div>
                 <div className="card-body">
                   <div className="row">
                     <div className="col-md-4">
-                      <label className="form-label">產品名稱</label>
+                      <label className="form-label">廢料名稱</label>
                       <input
                         type="text"
                         className="form-control"
@@ -326,7 +326,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th>產品名稱</th>
+                    <th>廢料名稱</th>
                     <th>價格</th>
                     <th>庫存</th>
                     <th>建立時間</th>
@@ -337,7 +337,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                   {products.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="text-center text-muted">
-                        尚無產品資料
+                        尚無廢料資料
                       </td>
                     </tr>
                   ) : (
