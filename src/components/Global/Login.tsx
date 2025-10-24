@@ -135,7 +135,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
     <div
       style={{
         backgroundImage:
-          "linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/src/assets/Homebackground.jpg')",
+          "linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/GENAI-webhosting/Homebackground.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
