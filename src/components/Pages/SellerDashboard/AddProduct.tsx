@@ -2,6 +2,8 @@ import { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 
+// Updated for GitHub Pages deployment
+
 interface AddProductProps {
   user: any;
   onSuccess: () => void;
