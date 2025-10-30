@@ -135,7 +135,8 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
+        backgroundImage:
+          `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
