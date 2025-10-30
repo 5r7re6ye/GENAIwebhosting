@@ -208,6 +208,7 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
               title="清除對話"
             >
               <i className="fas fa-trash"></i>
+              <span className="ms-1">clear</span>
             </button>
             <button
               className="btn btn-sm btn-outline-secondary"
@@ -215,6 +216,7 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
               title="關閉"
             >
               <i className="fas fa-times"></i>
+              <span className="ms-1">close</span>
             </button>
           </div>
         </div>
@@ -267,7 +269,10 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
               {isLoading ? (
                 <i className="fas fa-spinner fa-spin"></i>
               ) : (
-                <i className="fas fa-paper-plane"></i>
+                <>
+                  <i className="fas fa-paper-plane"></i>
+                  <span className="ms-1">send</span>
+                </>
               )}
             </button>
           </div>
