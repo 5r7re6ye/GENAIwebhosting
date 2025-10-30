@@ -239,7 +239,9 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       // Optional image upload if a new file is selected
       let photoURL = editingProduct.photoURL || null;
       if (editImageFile && user?.uid) {
-        const storagePath = `products/${user.uid}/${Date.now()}-${editImageFile.name}`;
+        const storagePath = `products/${user.uid}/${Date.now()}-${
+          editImageFile.name
+        }`;
         const storageRef = ref(storage, storagePath);
         await uploadBytes(storageRef, editImageFile);
         photoURL = await getDownloadURL(storageRef);
@@ -271,7 +273,9 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
   const handleCancelEdit = () => {
     setEditingProduct(null);
-    setEditForm({ name: "", quantity: "", weight: "", type: "", price: "" });
+    setEditForm({ name: "", quantity: "", weight: "", type: "", price: "", description: "" });
+    setEditImageFile(null);
+    setEditImagePreview("");
     setError("");
   };
 
@@ -502,9 +506,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                 </div>
 
                 {/* Description */}
-                <div
-                  style={{ marginTop: "10px", marginBottom: "20px" }}
-                >
+                <div style={{ marginTop: "10px", marginBottom: "20px" }}>
                   <label
                     style={{
                       display: "block",
