@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../firebase/config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../../firebase/config";
 
 // Updated for GitHub Pages deployment
 
@@ -16,6 +17,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
   const [productWeight, setProductWeight] = useState("");
   const [productType, setProductType] = useState("");
   const [productPrice, setProductPrice] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -36,6 +40,15 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
     setError("");
 
     try {
+      // Optional: upload image and get URL
+      let photoURL: string | undefined = undefined;
+      if (imageFile && user?.uid) {
+        const storagePath = `products/${user.uid}/${Date.now()}-${imageFile.name}`;
+        const storageRef = ref(storage, storagePath);
+        await uploadBytes(storageRef, imageFile);
+        photoURL = await getDownloadURL(storageRef);
+      }
+
       // Add product to Firestore
       const docRef = await addDoc(collection(db, "products"), {
         name: productName,
@@ -43,6 +56,8 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
         weight: parseFloat(productWeight),
         type: productType,
         price: parseFloat(productPrice),
+        description: productDescription,
+        photoURL: photoURL || null,
         sellerId: user?.uid,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -57,6 +72,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
       setProductType("");
       setProductPrice("");
       setError("");
+      setProductDescription("");
+      setImageFile(null);
+      setImagePreview("");
 
       // Show success message
       alert("廢料已成功儲存！");
@@ -151,6 +169,81 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
               onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
             />
           </div>
+
+        {/* Description */}
+        <div style={{ marginBottom: "20px" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "8px",
+              color: "#6c757d",
+              fontSize: "14px",
+              fontWeight: "bold",
+            }}
+          >
+            描述
+          </label>
+          <textarea
+            value={productDescription}
+            onChange={(e) => setProductDescription(e.target.value)}
+            placeholder="請輸入描述 (選填)"
+            disabled={isLoading}
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "12px 16px",
+              border: "2px solid #e9ecef",
+              borderRadius: "10px",
+              fontSize: "16px",
+              outline: "none",
+              transition: "border-color 0.3s ease",
+              backgroundColor: isLoading ? "#f8f9fa" : "white",
+              resize: "vertical",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+            onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+          />
+        </div>
+
+        {/* Image upload */}
+        <div style={{ marginBottom: "20px" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "8px",
+              color: "#6c757d",
+              fontSize: "14px",
+              fontWeight: "bold",
+            }}
+          >
+            上傳圖片 (選填)
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            disabled={isLoading}
+            onChange={(e) => {
+              const file = e.target.files && e.target.files[0];
+              if (file) {
+                setImageFile(file);
+                const reader = new FileReader();
+                reader.onload = () => setImagePreview(reader.result as string);
+                reader.readAsDataURL(file);
+              } else {
+                setImageFile(null);
+                setImagePreview("");
+              }
+            }}
+            style={{ display: "block", marginBottom: "10px" }}
+          />
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="預覽"
+              style={{ maxWidth: "100%", borderRadius: "8px", border: "1px solid #e9ecef" }}
+            />)
+          }
+        </div>
 
           <div style={{ marginBottom: "20px" }}>
             <label

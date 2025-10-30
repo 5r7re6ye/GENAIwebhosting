@@ -9,7 +9,8 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../../firebase/config";
+import { db, storage } from "../../../firebase/config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import GHeader from "../../Global/Header";
 import Alert from "../../Global/Alert";
 import AddProduct from "./AddProduct";
@@ -46,7 +47,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     weight: "",
     type: "",
     price: "",
+    description: "",
   });
+  const [editImageFile, setEditImageFile] = useState<File | null>(null);
+  const [editImagePreview, setEditImagePreview] = useState<string>("");
 
   // Message-related states
   const [messageView, setMessageView] = useState<"messages" | "findUsers">(
@@ -188,7 +192,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       weight: product.weight.toString(),
       type: product.type,
       price: product.price.toString(),
+      description: product.description || "",
     });
+    setEditImageFile(null);
+    setEditImagePreview(product.photoURL || "");
   };
 
   const handleSaveEdit = async () => {
@@ -229,16 +236,29 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     setError("");
 
     try {
+      // Optional image upload if a new file is selected
+      let photoURL = editingProduct.photoURL || null;
+      if (editImageFile && user?.uid) {
+        const storagePath = `products/${user.uid}/${Date.now()}-${editImageFile.name}`;
+        const storageRef = ref(storage, storagePath);
+        await uploadBytes(storageRef, editImageFile);
+        photoURL = await getDownloadURL(storageRef);
+      }
+
       await updateDoc(doc(db, "products", editingProduct.id), {
         name: editForm.name,
         quantity: quantity,
         weight: weight,
         type: editForm.type,
         price: price,
+        description: editForm.description,
+        photoURL: photoURL,
         updatedAt: serverTimestamp(),
       });
 
       setEditingProduct(null);
+      setEditImageFile(null);
+      setEditImagePreview("");
       showAlert("廢料已成功更新！", "success");
     } catch (error: any) {
       console.error("Error updating product:", error);
@@ -479,6 +499,89 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                       onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
                     />
                   </div>
+                </div>
+
+                {/* Description */}
+                <div
+                  style={{ marginTop: "10px", marginBottom: "20px" }}
+                >
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "8px",
+                      color: "#6c757d",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    描述
+                  </label>
+                  <textarea
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, description: e.target.value })
+                    }
+                    disabled={isLoading}
+                    rows={4}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      border: "2px solid #e9ecef",
+                      borderRadius: "10px",
+                      fontSize: "16px",
+                      outline: "none",
+                      transition: "border-color 0.3s ease",
+                      backgroundColor: isLoading ? "#f8f9fa" : "white",
+                      resize: "vertical",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                  />
+                </div>
+
+                {/* Image upload */}
+                <div style={{ marginBottom: "10px" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "8px",
+                      color: "#6c757d",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    變更圖片 (選填)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={isLoading}
+                    onChange={(e) => {
+                      const file = e.target.files && e.target.files[0];
+                      if (file) {
+                        setEditImageFile(file);
+                        const reader = new FileReader();
+                        reader.onload = () =>
+                          setEditImagePreview(reader.result as string);
+                        reader.readAsDataURL(file);
+                      } else {
+                        setEditImageFile(null);
+                        setEditImagePreview(editingProduct?.photoURL || "");
+                      }
+                    }}
+                    style={{ display: "block", marginBottom: "10px" }}
+                  />
+                  {editImagePreview && (
+                    <img
+                      src={editImagePreview}
+                      alt="預覽"
+                      style={{
+                        maxWidth: "100%",
+                        borderRadius: "8px",
+                        border: "1px solid #e9ecef",
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div>
@@ -910,7 +1013,9 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                   </button>
                 </div>
                 <div className="card-body">
-                  <h5 className="card-title">{selectedBuyer.username || "未設定用戶名"}</h5>
+                  <h5 className="card-title">
+                    {selectedBuyer.username || "未設定用戶名"}
+                  </h5>
                   <p className="card-text">
                     <strong>電子郵件:</strong> {selectedBuyer.email}
                     <br />
@@ -926,8 +1031,11 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                         <br />
                       </>
                     )}
-                    <strong>註冊時間:</strong> {selectedBuyer.createdAt
-                      ? new Date(selectedBuyer.createdAt.seconds * 1000).toLocaleDateString("zh-TW")
+                    <strong>註冊時間:</strong>{" "}
+                    {selectedBuyer.createdAt
+                      ? new Date(
+                          selectedBuyer.createdAt.seconds * 1000
+                        ).toLocaleDateString("zh-TW")
                       : "未知"}
                   </p>
                 </div>
