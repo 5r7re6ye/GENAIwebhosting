@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../../../firebase/config";
+import { db } from "../../../firebase/config";
 
 // Updated for GitHub Pages deployment
 
@@ -40,16 +39,18 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
     setError("");
 
     try {
-      // Optional: upload image and get URL
+      // Optional: convert image to base64 data URL (no Firebase Storage)
       let photoURL: string | undefined = undefined;
-      if (imageFile && user?.uid) {
-        const storagePath = `products/${user.uid}/${Date.now()}-${imageFile.name}`;
-        const storageRef = ref(storage, storagePath);
-        await uploadBytes(storageRef, imageFile);
-        photoURL = await getDownloadURL(storageRef);
+      if (imageFile) {
+        photoURL = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(imageFile);
+        });
       }
 
-      // Add product to Firestore
+      // Add product to Firestore with base64 image
       const docRef = await addDoc(collection(db, "products"), {
         name: productName,
         quantity: parseInt(productQuantity),
@@ -170,80 +171,85 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
             />
           </div>
 
-        {/* Description */}
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              color: "#6c757d",
-              fontSize: "14px",
-              fontWeight: "bold",
-            }}
-          >
-            描述
-          </label>
-          <textarea
-            value={productDescription}
-            onChange={(e) => setProductDescription(e.target.value)}
-            placeholder="請輸入描述 (選填)"
-            disabled={isLoading}
-            rows={4}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              border: "2px solid #e9ecef",
-              borderRadius: "10px",
-              fontSize: "16px",
-              outline: "none",
-              transition: "border-color 0.3s ease",
-              backgroundColor: isLoading ? "#f8f9fa" : "white",
-              resize: "vertical",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
-            onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
-          />
-        </div>
+          {/* Description */}
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              描述
+            </label>
+            <textarea
+              value={productDescription}
+              onChange={(e) => setProductDescription(e.target.value)}
+              placeholder="請輸入描述 (選填)"
+              disabled={isLoading}
+              rows={4}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+                resize: "vertical",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            />
+          </div>
 
-        {/* Image upload */}
-        <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              color: "#6c757d",
-              fontSize: "14px",
-              fontWeight: "bold",
-            }}
-          >
-            上傳圖片 (選填)
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            disabled={isLoading}
-            onChange={(e) => {
-              const file = e.target.files && e.target.files[0];
-              if (file) {
-                setImageFile(file);
-                const reader = new FileReader();
-                reader.onload = () => setImagePreview(reader.result as string);
-                reader.readAsDataURL(file);
-              } else {
-                setImageFile(null);
-                setImagePreview("");
-              }
-            }}
-            style={{ display: "block", marginBottom: "10px" }}
-          />
-          {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="預覽"
-              style={{ maxWidth: "100%", borderRadius: "8px", border: "1px solid #e9ecef" }}
-            />)
-          }
-        </div>
+          {/* Image upload */}
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              上傳圖片 (選填)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              disabled={isLoading}
+              onChange={(e) => {
+                const file = e.target.files && e.target.files[0];
+                if (file) {
+                  setImageFile(file);
+                  const reader = new FileReader();
+                  reader.onload = () =>
+                    setImagePreview(reader.result as string);
+                  reader.readAsDataURL(file);
+                } else {
+                  setImageFile(null);
+                  setImagePreview("");
+                }
+              }}
+              style={{ display: "block", marginBottom: "10px" }}
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="預覽"
+                style={{
+                  maxWidth: "100%",
+                  borderRadius: "8px",
+                  border: "1px solid #e9ecef",
+                }}
+              />
+            )}
+          </div>
 
           <div style={{ marginBottom: "20px" }}>
             <label

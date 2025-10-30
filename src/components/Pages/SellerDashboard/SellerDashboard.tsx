@@ -9,8 +9,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db, storage } from "../../../firebase/config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db } from "../../../firebase/config";
 import GHeader from "../../Global/Header";
 import Alert from "../../Global/Alert";
 import AddProduct from "./AddProduct";
@@ -236,15 +235,15 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     setError("");
 
     try {
-      // Optional image upload if a new file is selected
+      // Optional: convert image to base64 data URL (no Firebase Storage)
       let photoURL = editingProduct.photoURL || null;
-      if (editImageFile && user?.uid) {
-        const storagePath = `products/${user.uid}/${Date.now()}-${
-          editImageFile.name
-        }`;
-        const storageRef = ref(storage, storagePath);
-        await uploadBytes(storageRef, editImageFile);
-        photoURL = await getDownloadURL(storageRef);
+      if (editImageFile) {
+        photoURL = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(editImageFile);
+        });
       }
 
       await updateDoc(doc(db, "products", editingProduct.id), {
@@ -273,7 +272,14 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
   const handleCancelEdit = () => {
     setEditingProduct(null);
-    setEditForm({ name: "", quantity: "", weight: "", type: "", price: "", description: "" });
+    setEditForm({
+      name: "",
+      quantity: "",
+      weight: "",
+      type: "",
+      price: "",
+      description: "",
+    });
     setEditImageFile(null);
     setEditImagePreview("");
     setError("");
