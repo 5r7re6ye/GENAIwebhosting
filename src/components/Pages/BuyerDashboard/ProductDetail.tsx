@@ -71,17 +71,35 @@ function ProductDetail({
 
       {product ? (
         <div className="row">
-          {/* Product Image Placeholder */}
+          {/* Product Image */}
           <div className="col-md-6 mb-4">
             <div className="card">
               <div className="card-body text-center">
-                <div
-                  className="bg-light d-flex align-items-center justify-content-center"
-                  style={{ height: "300px", borderRadius: "8px" }}
-                >
-                  <i className="fas fa-image fa-3x text-muted"></i>
-                </div>
-                <p className="text-muted mt-2">商品圖片</p>
+                {product.photoURL ? (
+                  <>
+                    <img
+                      src={product.photoURL}
+                      alt={product.name}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "300px",
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <p className="text-muted mt-2">商品圖片</p>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="bg-light d-flex align-items-center justify-content-center"
+                      style={{ height: "300px", borderRadius: "8px" }}
+                    >
+                      <i className="fas fa-image fa-3x text-muted"></i>
+                    </div>
+                    <p className="text-muted mt-2">商品圖片</p>
+                  </>
+                )}
               </div>
             </div>
           </div>

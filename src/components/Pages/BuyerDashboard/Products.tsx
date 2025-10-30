@@ -353,6 +353,14 @@ function Products({
                 style={{ cursor: "pointer" }}
                 onClick={() => onProductClick(product)}
               >
+                {product.photoURL && (
+                  <img
+                    src={product.photoURL}
+                    alt={product.name}
+                    className="card-img-top"
+                    style={{ height: "180px", objectFit: "cover" }}
+                  />
+                )}
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text">
