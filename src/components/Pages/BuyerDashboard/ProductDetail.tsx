@@ -104,14 +104,14 @@ function ProductDetail({
                 )}
 
                 <div className="mb-3">
-                  <h5>庫存狀況</h5>
+                  <h5>數量狀況</h5>
                   <span
                     className={`badge ${
                       product.quantity > 0 ? "bg-success" : "bg-danger"
                     }`}
                   >
                     {product.quantity > 0
-                      ? `庫存 ${product.quantity} 個`
+                      ? `數量 ${product.quantity} 個`
                       : "缺貨"}
                   </span>
                 </div>

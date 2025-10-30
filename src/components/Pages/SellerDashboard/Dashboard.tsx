@@ -103,131 +103,295 @@ function Dashboard({ user }: DashboardProps) {
   }
 
   return (
-    <div className="p-4">
-      <h3 className="mb-4">儀表板概覽</h3>
-
-      {/* Statistics Cards */}
-      <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card bg-primary text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h5 className="card-title">總廢料</h5>
-                  <h2 className="mb-0">{stats.totalProducts}</h2>
-                </div>
-                <div className="align-self-center">
-                  <i className="fas fa-box fa-2x"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div>
+      {/* Summary Cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "20px",
+          marginBottom: "40px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#D59C00",
+            borderRadius: "20px",
+            padding: "25px",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <h4
+            style={{
+              margin: "0 0 15px 0",
+              fontSize: "16px",
+              fontWeight: "normal",
+            }}
+          >
+            待回收廢料
+          </h4>
+          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+            {stats.totalProducts}
+          </h1>
         </div>
 
-        <div className="col-md-3">
-          <div className="card bg-success text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h5 className="card-title">總訂單</h5>
-                  <h2 className="mb-0">{stats.totalOrders}</h2>
-                </div>
-                <div className="align-self-center">
-                  <i className="fas fa-shopping-cart fa-2x"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          style={{
+            backgroundColor: "#D59C00",
+            borderRadius: "20px",
+            padding: "25px",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <h4
+            style={{
+              margin: "0 0 15px 0",
+              fontSize: "16px",
+              fontWeight: "normal",
+            }}
+          >
+            回收確認中
+          </h4>
+          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+            {stats.pendingOrders}
+          </h1>
         </div>
 
-        <div className="col-md-3">
-          <div className="card bg-warning text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h5 className="card-title">待確認</h5>
-                  <h2 className="mb-0">{stats.pendingOrders}</h2>
-                </div>
-                <div className="align-self-center">
-                  <i className="fas fa-clock fa-2x"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          style={{
+            backgroundColor: "#D59C00",
+            borderRadius: "20px",
+            padding: "25px",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <h4
+            style={{
+              margin: "0 0 15px 0",
+              fontSize: "16px",
+              fontWeight: "normal",
+            }}
+          >
+            廢料處理中
+          </h4>
+          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+            {stats.confirmedOrders}
+          </h1>
         </div>
 
-        <div className="col-md-3">
-          <div className="card bg-info text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h5 className="card-title">總收入</h5>
-                  <h2 className="mb-0">${stats.totalRevenue.toFixed(2)}</h2>
-                </div>
-                <div className="align-self-center">
-                  <i className="fas fa-dollar-sign fa-2x"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          style={{
+            backgroundColor: "#D59C00",
+            borderRadius: "20px",
+            padding: "25px",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <h4
+            style={{
+              margin: "0 0 15px 0",
+              fontSize: "16px",
+              fontWeight: "normal",
+            }}
+          >
+            總收入
+          </h4>
+          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+            ${stats.totalRevenue.toFixed(0)}
+          </h1>
         </div>
       </div>
 
-      {/* Recent Orders */}
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="mb-0">最近訂單</h5>
-            </div>
-            <div className="card-body">
-              {recentOrders.length === 0 ? (
-                <p className="text-muted text-center">尚無訂單記錄</p>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>訂單編號</th>
-                        <th>買家</th>
-                        <th>金額</th>
-                        <th>狀態</th>
-                        <th>日期</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentOrders.map((order) => (
-                        <tr key={order.id}>
-                          <td>{order.orderNumber}</td>
-                          <td>{order.buyerName || "未知買家"}</td>
-                          <td>${order.totalAmount?.toFixed(2) || "0.00"}</td>
-                          <td>
-                            {order.status === "pending" ? (
-                              <span className="badge bg-warning">待確認</span>
-                            ) : (
-                              <span className="badge bg-success">已確認</span>
-                            )}
-                          </td>
-                          <td>
-                            {order.createdAt
-                              ? order.createdAt.toDate
-                                ? order.createdAt
-                                    .toDate()
-                                    .toLocaleDateString("zh-TW")
-                                : new Date(
-                                    order.createdAt.seconds * 1000
-                                  ).toLocaleDateString("zh-TW")
-                              : "未知"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+      {/* Recent Orders Table */}
+      <div>
+        <h3
+          style={{
+            color: "#6c757d",
+            fontSize: "20px",
+            fontWeight: "bold",
+            marginBottom: "20px",
+          }}
+        >
+          最近回收訂單
+        </h3>
+
+        {recentOrders.length === 0 ? (
+          <p
+            style={{
+              color: "#6c757d",
+              textAlign: "center",
+              fontSize: "16px",
+              padding: "40px",
+            }}
+          >
+            尚無訂單記錄
+          </p>
+        ) : (
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: "10px",
+              overflow: "hidden",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            }}
+          >
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontFamily: "sans-serif",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: "#f8f9fa",
+                    borderBottom: "2px solid #e9ecef",
+                  }}
+                >
+                  <th
+                    style={{
+                      padding: "15px 20px",
+                      textAlign: "left",
+                      color: "#6c757d",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                    }}
+                  >
+                    訂單編號
+                  </th>
+                  <th
+                    style={{
+                      padding: "15px 20px",
+                      textAlign: "left",
+                      color: "#6c757d",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                    }}
+                  >
+                    回收者
+                  </th>
+                  <th
+                    style={{
+                      padding: "15px 20px",
+                      textAlign: "center",
+                      color: "#6c757d",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                    }}
+                  >
+                    金額
+                  </th>
+                  <th
+                    style={{
+                      padding: "15px 20px",
+                      textAlign: "center",
+                      color: "#6c757d",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                    }}
+                  >
+                    狀態
+                  </th>
+                  <th
+                    style={{
+                      padding: "15px 20px",
+                      textAlign: "left",
+                      color: "#6c757d",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                    }}
+                  >
+                    日期
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentOrders.map((order, index) => (
+                  <tr
+                    key={order.id}
+                    style={{
+                      borderBottom:
+                        index < recentOrders.length - 1
+                          ? "1px solid #e9ecef"
+                          : "none",
+                    }}
+                  >
+                    <td
+                      style={{
+                        padding: "15px 20px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.orderNumber || `#${order.id.slice(-8)}`}
+                    </td>
+                    <td
+                      style={{
+                        padding: "15px 20px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.buyerName || "Buyertester"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "center",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                      }}
+                    >
+                      ${order.totalAmount?.toFixed(0) || "10"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "center",
+                      }}
+                    >
+                      <span
+                        style={{
+                          backgroundColor:
+                            order.status === "confirmed"
+                              ? "#28a745"
+                              : "#ffc107",
+                          color: "white",
+                          padding: "4px 12px",
+                          borderRadius: "15px",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {order.status === "confirmed" ? "已確認" : "待確認"}
+                      </span>
+                    </td>
+                    <td
+                      style={{
+                        padding: "15px 20px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {order.createdAt
+                        ? order.createdAt.toDate
+                          ? order.createdAt.toDate().toLocaleDateString("zh-TW")
+                          : new Date(
+                              order.createdAt.seconds * 1000
+                            ).toLocaleDateString("zh-TW")
+                        : "2025/10/20"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

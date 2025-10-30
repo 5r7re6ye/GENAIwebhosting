@@ -72,6 +72,15 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
 
   // Cart management functions
   const handleAddToCart = (product: any) => {
+    console.log("Adding product to cart:", product);
+
+    // Ensure product has all required properties
+    if (!product.id || !product.name || !product.price) {
+      console.error("Product missing required properties:", product);
+      alert("商品資訊不完整，無法加入購物車");
+      return;
+    }
+
     const existingItem = cart.find((item) => item.id === product.id);
     if (existingItem) {
       setCart(
@@ -82,7 +91,20 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         )
       );
     } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      // Ensure we include all necessary properties for cart
+      const cartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity || 1, // Use provided quantity or default to 1
+        sellerId: product.sellerId,
+        sellerName: product.sellerName,
+        weight: product.weight,
+        type: product.type,
+        photoURL: product.photoURL,
+      };
+      console.log("Adding new cart item:", cartItem);
+      setCart([...cart, cartItem]);
     }
   };
 
@@ -119,6 +141,13 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
       // Group cart items by seller
       const ordersBySeller = cart.reduce((acc, item) => {
         console.log("Processing cart item:", item);
+
+        // Ensure item has required properties
+        if (!item.sellerId || !item.sellerName) {
+          console.error("Cart item missing seller info:", item);
+          return acc;
+        }
+
         const sellerId = item.sellerId;
         if (!acc[sellerId]) {
           acc[sellerId] = {
@@ -137,6 +166,12 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         acc[sellerId].totalAmount += item.price * item.quantity;
         return acc;
       }, {});
+
+      // Check if we have any valid orders
+      if (Object.keys(ordersBySeller).length === 0) {
+        alert("購物車中的商品資訊不完整，無法確認訂單");
+        return;
+      }
 
       // Get buyer name
       const buyerQuery = query(
@@ -401,42 +436,147 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
   };
 
   return (
-    <div>
-      <GHeader />
+    <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+      {/* Header */}
       <div
-        className="container-fluid"
-        style={{ height: "100vh", position: "relative" }}
+        style={{
+          backgroundColor: "white",
+          padding: "20px 40px",
+          borderBottom: "1px solid #e9ecef",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        {/* Main Content */}
-        <div className="row" style={{ height: "100vh" }}>
-          {/* Function Selection Panel (Left) */}
-          <FunctionMenu
-            title="功能選單"
-            menuItems={buyerMenuItems}
-            selectedFunction={buyerSelectedFunction}
-            onFunctionSelect={setBuyerSelectedFunction}
-          />
+        <h1
+          style={{
+            color: "#D59C00",
+            fontSize: "32px",
+            fontWeight: "bold",
+            margin: 0,
+            fontFamily: "sans-serif",
+          }}
+        >
+          CWRS
+        </h1>
+        <div style={{ display: "flex", gap: "30px" }}>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            About us
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Contact
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Update
+          </a>
+        </div>
+      </div>
 
-          {/* Main Function Panel (Right) */}
-          <div className="col-md-9 p-0">
-            <div style={{ height: "100%", overflowY: "auto" }}>
-              {renderBuyerMainPanel()}
-            </div>
-          </div>
+      <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
+        {/* Sidebar */}
+        <div
+          style={{
+            width: "250px",
+            backgroundColor: "#f1f3f4",
+            padding: "20px 0",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {buyerMenuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setBuyerSelectedFunction(item.id)}
+              style={{
+                backgroundColor:
+                  buyerSelectedFunction === item.id ? "#D59C00" : "transparent",
+                color: buyerSelectedFunction === item.id ? "white" : "#6c757d",
+                border: "none",
+                padding: "15px 20px",
+                textAlign: "left",
+                fontSize: "16px",
+                cursor: "pointer",
+                borderRadius:
+                  buyerSelectedFunction === item.id ? "0 25px 25px 0" : "0",
+                marginRight: buyerSelectedFunction === item.id ? "0" : "10px",
+                transition: "all 0.3s ease",
+                position: "relative",
+              }}
+            >
+              <i className={`${item.icon} me-2`}></i>
+              {item.label}
+              {item.badge && item.badge > 0 && (
+                <span
+                  style={{
+                    backgroundColor: "#dc3545",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "2px 6px",
+                    fontSize: "12px",
+                    marginLeft: "8px",
+                  }}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </button>
+          ))}
+
+          {/* Logout Button */}
+          <button
+            onClick={onLogout}
+            style={{
+              backgroundColor: "#dc3545",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "20px",
+              fontSize: "14px",
+              cursor: "pointer",
+              margin: "auto 20px 20px 20px",
+              width: "calc(100% - 40px)",
+            }}
+          >
+            登出
+          </button>
         </div>
 
-        {/* Logout Button - Bottom Left */}
-        <button
-          className="btn btn-outline-danger position-fixed"
-          style={{ bottom: "20px", left: "20px", zIndex: 1000 }}
-          onClick={onLogout}
+        {/* Main Content */}
+        <div
+          style={{
+            flex: 1,
+            padding: "30px",
+            overflowY: "auto",
+            backgroundColor: "#f8f9fa",
+          }}
         >
-          登出
-        </button>
-
-        {/* AI Chat Component */}
-        <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+          {renderBuyerMainPanel()}
+        </div>
       </div>
+
+      {/* AI Chat Component */}
+      <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </div>
   );
 }

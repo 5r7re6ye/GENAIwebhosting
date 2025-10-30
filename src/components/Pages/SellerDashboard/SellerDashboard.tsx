@@ -42,8 +42,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [editForm, setEditForm] = useState({
     name: "",
-    price: "",
     quantity: "",
+    weight: "",
+    type: "",
+    price: "",
   });
 
   // Message-related states
@@ -179,8 +181,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     setEditingProduct(product);
     setEditForm({
       name: product.name,
-      price: product.price.toString(),
       quantity: product.quantity.toString(),
+      weight: product.weight.toString(),
+      type: product.type,
+      price: product.price.toString(),
     });
   };
 
@@ -188,21 +192,33 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     if (!editingProduct) return;
 
     // Validate form
-    if (!editForm.name || !editForm.price || !editForm.quantity) {
+    if (
+      !editForm.name ||
+      !editForm.quantity ||
+      !editForm.weight ||
+      !editForm.type ||
+      !editForm.price
+    ) {
       setError("請填寫所有欄位");
       return;
     }
 
-    const price = parseFloat(editForm.price);
     const quantity = parseInt(editForm.quantity);
+    const weight = parseFloat(editForm.weight);
+    const price = parseFloat(editForm.price);
 
-    if (isNaN(price) || price <= 0) {
-      setError("價格必須是大於0的數字");
+    if (isNaN(quantity) || quantity < 0) {
+      setError("數量必須是大於等於0的整數");
       return;
     }
 
-    if (isNaN(quantity) || quantity < 0) {
-      setError("庫存必須是大於等於0的整數");
+    if (isNaN(weight) || weight <= 0) {
+      setError("重量必須是大於0的數字");
+      return;
+    }
+
+    if (isNaN(price) || price <= 0) {
+      setError("價格必須是大於0的數字");
       return;
     }
 
@@ -212,8 +228,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     try {
       await updateDoc(doc(db, "products", editingProduct.id), {
         name: editForm.name,
-        price: price,
         quantity: quantity,
+        weight: weight,
+        type: editForm.type,
+        price: price,
         updatedAt: serverTimestamp(),
       });
 
@@ -230,7 +248,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
   const handleCancelEdit = () => {
     setEditingProduct(null);
-    setEditForm({ name: "", price: "", quantity: "" });
+    setEditForm({ name: "", quantity: "", weight: "", type: "", price: "" });
     setError("");
   };
 
@@ -242,131 +260,541 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
       case "products":
         return (
-          <div className="p-4">
-            <h3 className="mb-4">廢料管理</h3>
-            <div className="mb-3">
-              <button className="btn btn-success" onClick={handleAddProduct}>
+          <div>
+            <h3
+              style={{
+                color: "#6c757d",
+                fontSize: "24px",
+                fontWeight: "bold",
+                marginBottom: "30px",
+              }}
+            >
+              廢料管理
+            </h3>
+
+            <div style={{ marginBottom: "20px" }}>
+              <button
+                onClick={handleAddProduct}
+                style={{
+                  backgroundColor: "#D59C00",
+                  color: "white",
+                  border: "none",
+                  padding: "12px 24px",
+                  borderRadius: "25px",
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+              >
                 創造請求
               </button>
             </div>
 
             {error && (
-              <div className="alert alert-danger" role="alert">
+              <div
+                style={{
+                  backgroundColor: "#f8d7da",
+                  color: "#721c24",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  marginBottom: "20px",
+                  fontSize: "14px",
+                }}
+              >
                 {error}
               </div>
             )}
 
             {/* Edit Form */}
             {editingProduct && (
-              <div className="card mb-4">
-                <div className="card-header">
-                  <h5 className="mb-0">編輯廢料</h5>
+              <div
+                style={{
+                  backgroundColor: "white",
+                  padding: "30px",
+                  borderRadius: "20px",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+                  marginBottom: "30px",
+                }}
+              >
+                <h4
+                  style={{
+                    color: "#6c757d",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    marginBottom: "20px",
+                  }}
+                >
+                  編輯廢料
+                </h4>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: "20px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      廢料名稱
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, name: e.target.value })
+                      }
+                      disabled={isLoading}
+                      style={{
+                        width: "100%",
+                        padding: "12px 16px",
+                        border: "2px solid #e9ecef",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        outline: "none",
+                        transition: "border-color 0.3s ease",
+                        backgroundColor: isLoading ? "#f8f9fa" : "white",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                      onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      數量
+                    </label>
+                    <input
+                      type="number"
+                      value={editForm.quantity}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, quantity: e.target.value })
+                      }
+                      disabled={isLoading}
+                      min="0"
+                      style={{
+                        width: "100%",
+                        padding: "12px 16px",
+                        border: "2px solid #e9ecef",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        outline: "none",
+                        transition: "border-color 0.3s ease",
+                        backgroundColor: isLoading ? "#f8f9fa" : "white",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                      onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      重量 (kg)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={editForm.weight}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, weight: e.target.value })
+                      }
+                      disabled={isLoading}
+                      min="0"
+                      style={{
+                        width: "100%",
+                        padding: "12px 16px",
+                        border: "2px solid #e9ecef",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        outline: "none",
+                        transition: "border-color 0.3s ease",
+                        backgroundColor: isLoading ? "#f8f9fa" : "white",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                      onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        color: "#6c757d",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      價格 ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={editForm.price}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, price: e.target.value })
+                      }
+                      disabled={isLoading}
+                      min="0"
+                      style={{
+                        width: "100%",
+                        padding: "12px 16px",
+                        border: "2px solid #e9ecef",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        outline: "none",
+                        transition: "border-color 0.3s ease",
+                        backgroundColor: isLoading ? "#f8f9fa" : "white",
+                      }}
+                      onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                      onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                    />
+                  </div>
                 </div>
-                <div className="card-body">
-                  <div className="row">
-                    <div className="col-md-4">
-                      <label className="form-label">廢料名稱</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={editForm.name}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, name: e.target.value })
-                        }
-                        disabled={isLoading}
-                      />
-                    </div>
-                    <div className="col-md-4">
-                      <label className="form-label">價格</label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        value={editForm.price}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, price: e.target.value })
-                        }
-                        disabled={isLoading}
-                      />
-                    </div>
-                    <div className="col-md-4">
-                      <label className="form-label">庫存</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={editForm.quantity}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, quantity: e.target.value })
-                        }
-                        disabled={isLoading}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={handleSaveEdit}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "儲存中..." : "儲存"}
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={handleCancelEdit}
-                      disabled={isLoading}
-                    >
-                      取消
-                    </button>
-                  </div>
+
+                <div>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "8px",
+                      color: "#6c757d",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    種類
+                  </label>
+                  <select
+                    value={editForm.type}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, type: e.target.value })
+                    }
+                    disabled={isLoading}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      border: "2px solid #e9ecef",
+                      borderRadius: "10px",
+                      fontSize: "16px",
+                      outline: "none",
+                      transition: "border-color 0.3s ease",
+                      backgroundColor: isLoading ? "#f8f9fa" : "white",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+                  >
+                    <option value="">請選擇建材種類</option>
+                    <option value="玻璃">玻璃</option>
+                    <option value="金屬">金屬</option>
+                    <option value="瀝青">瀝青</option>
+                    <option value="煤灰">煤灰</option>
+                    <option value="泡沫塑料">泡沫塑料</option>
+                    <option value="塑膠">塑膠</option>
+                    <option value="碎石骨料">碎石骨料</option>
+                    <option value="挖掘料">挖掘料</option>
+                    <option value="橡膠">橡膠</option>
+                    <option value="公眾填料">公眾填料</option>
+                    <option value="其他">其他</option>
+                  </select>
+                </div>
+
+                <div
+                  style={{ display: "flex", gap: "15px", marginTop: "20px" }}
+                >
+                  <button
+                    onClick={handleSaveEdit}
+                    disabled={isLoading}
+                    style={{
+                      backgroundColor: "#D59C00",
+                      color: "white",
+                      border: "none",
+                      padding: "12px 30px",
+                      borderRadius: "25px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      cursor: isLoading ? "not-allowed" : "pointer",
+                      opacity: isLoading ? 0.7 : 1,
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    {isLoading ? "儲存中..." : "儲存"}
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    disabled={isLoading}
+                    style={{
+                      backgroundColor: "transparent",
+                      color: "#D59C00",
+                      border: "2px solid #D59C00",
+                      padding: "10px 30px",
+                      borderRadius: "25px",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      cursor: isLoading ? "not-allowed" : "pointer",
+                      opacity: isLoading ? 0.7 : 1,
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    取消
+                  </button>
                 </div>
               </div>
             )}
 
-            <div className="table-responsive">
-              <table className="table table-striped">
+            <div
+              style={{
+                backgroundColor: "white",
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+              }}
+            >
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontFamily: "sans-serif",
+                }}
+              >
                 <thead>
-                  <tr>
-                    <th>廢料名稱</th>
-                    <th>價格</th>
-                    <th>庫存</th>
-                    <th>建立時間</th>
-                    <th>操作</th>
+                  <tr
+                    style={{
+                      backgroundColor: "#f8f9fa",
+                      borderBottom: "2px solid #e9ecef",
+                    }}
+                  >
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "left",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      廢料名稱
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "left",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      數量
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "left",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      重量 (kg)
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "left",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      種類
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "center",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      價格 ($)
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "left",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      建立時間
+                    </th>
+                    <th
+                      style={{
+                        padding: "15px 20px",
+                        textAlign: "center",
+                        color: "#6c757d",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                      }}
+                    >
+                      操作
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {products.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="text-center text-muted">
+                      <td
+                        colSpan={7}
+                        style={{
+                          textAlign: "center",
+                          color: "#6c757d",
+                          padding: "40px",
+                          fontSize: "16px",
+                        }}
+                      >
                         尚無廢料資料
                       </td>
                     </tr>
                   ) : (
-                    products.map((product) => (
-                      <tr key={product.id}>
-                        <td>{product.name}</td>
-                        <td>${product.price}</td>
-                        <td>{product.quantity}</td>
-                        <td>
+                    products.map((product, index) => (
+                      <tr
+                        key={product.id}
+                        style={{
+                          borderBottom:
+                            index < products.length - 1
+                              ? "1px solid #e9ecef"
+                              : "none",
+                        }}
+                      >
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {product.name}
+                        </td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {product.quantity}
+                        </td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {product.weight}
+                        </td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {product.type}
+                        </td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            textAlign: "center",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
+                          ${product.price}
+                        </td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            color: "#6c757d",
+                            fontSize: "14px",
+                          }}
+                        >
                           {product.createdAt
                             ? new Date(
                                 product.createdAt.seconds * 1000
                               ).toLocaleDateString("zh-TW")
                             : "N/A"}
                         </td>
-                        <td>
+                        <td
+                          style={{
+                            padding: "15px 20px",
+                            textAlign: "center",
+                          }}
+                        >
                           <button
-                            className="btn btn-sm btn-primary me-2"
                             onClick={() => handleEditProduct(product)}
                             disabled={isLoading}
+                            style={{
+                              backgroundColor: "#D59C00",
+                              color: "white",
+                              border: "none",
+                              padding: "6px 12px",
+                              borderRadius: "15px",
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              cursor: isLoading ? "not-allowed" : "pointer",
+                              marginRight: "8px",
+                              opacity: isLoading ? 0.7 : 1,
+                              transition: "all 0.3s ease",
+                            }}
                           >
                             編輯
                           </button>
                           <button
-                            className="btn btn-sm btn-danger"
                             onClick={() =>
                               handleDeleteProduct(product.id, product.name)
                             }
                             disabled={isLoading}
+                            style={{
+                              backgroundColor: "#dc3545",
+                              color: "white",
+                              border: "none",
+                              padding: "6px 12px",
+                              borderRadius: "15px",
+                              fontSize: "12px",
+                              fontWeight: "bold",
+                              cursor: isLoading ? "not-allowed" : "pointer",
+                              opacity: isLoading ? 0.7 : 1,
+                              transition: "all 0.3s ease",
+                            }}
                           >
                             {isLoading ? "刪除中..." : "刪除"}
                           </button>
@@ -481,48 +909,139 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
   };
 
   return (
-    <div>
-      <GHeader />
+    <div style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
       <Alert
         show={alert.show}
         message={alert.message}
         type={alert.type}
         onClose={hideAlert}
       />
-      <div
-        className="container-fluid"
-        style={{ height: "100vh", position: "relative" }}
-      >
-        {/* Main Content */}
-        <div className="row" style={{ height: "100vh" }}>
-          {/* Function Selection Panel (Left) */}
-          <FunctionMenu
-            title="功能選單"
-            menuItems={sellerMenuItems}
-            selectedFunction={selectedFunction}
-            onFunctionSelect={setSelectedFunction}
-          />
 
-          {/* Main Function Panel (Right) */}
-          <div className="col-md-9 p-0">
-            <div style={{ height: "100%", overflowY: "auto" }}>
-              {renderMainPanel()}
-            </div>
-          </div>
+      {/* Header */}
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "20px 40px",
+          borderBottom: "1px solid #e9ecef",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1
+          style={{
+            color: "#D59C00",
+            fontSize: "32px",
+            fontWeight: "bold",
+            margin: 0,
+            fontFamily: "sans-serif",
+          }}
+        >
+          CWRS
+        </h1>
+        <div style={{ display: "flex", gap: "30px" }}>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            About us
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Contact
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Update
+          </a>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
+        {/* Sidebar */}
+        <div
+          style={{
+            width: "250px",
+            backgroundColor: "#f1f3f4",
+            padding: "20px 0",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {sellerMenuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setSelectedFunction(item.id)}
+              style={{
+                backgroundColor:
+                  selectedFunction === item.id ? "#D59C00" : "transparent",
+                color: selectedFunction === item.id ? "white" : "#6c757d",
+                border: "none",
+                padding: "15px 20px",
+                textAlign: "left",
+                fontSize: "16px",
+                cursor: "pointer",
+                borderRadius:
+                  selectedFunction === item.id ? "0 25px 25px 0" : "0",
+                marginRight: selectedFunction === item.id ? "0" : "10px",
+                transition: "all 0.3s ease",
+              }}
+            >
+              <i className={`${item.icon} me-2`}></i>
+              {item.label}
+            </button>
+          ))}
+
+          {/* Logout Button */}
+          <button
+            onClick={onLogout}
+            style={{
+              backgroundColor: "#dc3545",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "20px",
+              fontSize: "14px",
+              cursor: "pointer",
+              margin: "auto 20px 20px 20px",
+              width: "calc(100% - 40px)",
+            }}
+          >
+            登出
+          </button>
         </div>
 
-        {/* Logout Button - Bottom Left */}
-        <button
-          className="btn btn-outline-danger position-fixed"
-          style={{ bottom: "20px", left: "20px", zIndex: 1000 }}
-          onClick={onLogout}
+        {/* Main Content */}
+        <div
+          style={{
+            flex: 1,
+            padding: "30px",
+            overflowY: "auto",
+            backgroundColor: "#f8f9fa",
+          }}
         >
-          登出
-        </button>
-
-        {/* AI Chat Component */}
-        <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+          {renderMainPanel()}
+        </div>
       </div>
+
+      {/* AI Chat Component */}
+      <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </div>
   );
 }

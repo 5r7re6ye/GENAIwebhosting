@@ -142,63 +142,209 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
         minHeight: "100vh",
       }}
     >
-      <GHeader />
+      {/* Header */}
       <div
-        className="container d-flex justify-content-center align-items-center"
-        style={{ minHeight: "60vh" }}
+        style={{
+          backgroundColor: "white",
+          padding: "20px 40px",
+          borderBottom: "1px solid #e9ecef",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1
+          style={{
+            color: "#D59C00",
+            fontSize: "32px",
+            fontWeight: "bold",
+            margin: 0,
+            fontFamily: "sans-serif",
+          }}
+        >
+          CWRS
+        </h1>
+        <div style={{ display: "flex", gap: "30px" }}>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            About us
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Contact
+          </a>
+          <a
+            href="#"
+            style={{
+              color: "#6c757d",
+              textDecoration: "none",
+              fontSize: "16px",
+            }}
+          >
+            Update
+          </a>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "calc(100vh - 80px)",
+          padding: "40px",
+        }}
       >
         <div
           style={{
             maxWidth: "400px",
             width: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
-            padding: "30px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "white",
+            padding: "40px",
+            borderRadius: "20px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
           }}
         >
+          <h2
+            style={{
+              textAlign: "center",
+              marginBottom: "30px",
+              color: "#6c757d",
+              fontSize: "24px",
+              fontWeight: "bold",
+            }}
+          >
+            登入
+          </h2>
+
           {error && (
-            <div className="alert alert-danger" role="alert">
+            <div
+              style={{
+                backgroundColor: "#f8d7da",
+                color: "#721c24",
+                padding: "12px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                fontSize: "14px",
+              }}
+            >
               {error}
             </div>
           )}
 
-          <div className="mb-3">
-            <label className="form-label">用戶名</label>
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              用戶名
+            </label>
             <input
               type="text"
-              className="form-control"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="請輸入用戶名"
               disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
             />
           </div>
-          <div className="mb-3">
-            <label className="form-label">密碼</label>
+
+          <div style={{ marginBottom: "30px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              密碼
+            </label>
             <input
               type="password"
-              className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="請輸入密碼"
               disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
             />
           </div>
-          <div className="text-center">
+
+          <div style={{ textAlign: "center" }}>
             <button
-              className="btn btn-primary btn-lg"
               onClick={handleLogin}
               disabled={isLoading}
-              style={{ marginRight: "10px" }}
+              style={{
+                backgroundColor: "#D59C00",
+                color: "white",
+                border: "none",
+                padding: "12px 30px",
+                borderRadius: "25px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                marginRight: "15px",
+                opacity: isLoading ? 0.7 : 1,
+                transition: "all 0.3s ease",
+              }}
             >
               {isLoading ? "登入中..." : "登入"}
             </button>
             <button
-              className="btn btn-secondary btn-lg"
               onClick={onSignUpClick}
               disabled={isLoading}
-              style={{ marginRight: "10px" }}
+              style={{
+                backgroundColor: "transparent",
+                color: "#D59C00",
+                border: "2px solid #D59C00",
+                padding: "10px 30px",
+                borderRadius: "25px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+                transition: "all 0.3s ease",
+              }}
             >
               {isLoading ? "註冊中..." : "註冊"}
             </button>

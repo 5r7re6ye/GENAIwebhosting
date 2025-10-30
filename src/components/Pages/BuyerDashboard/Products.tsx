@@ -214,8 +214,8 @@ function Products({
     const weightMatch = (() => {
       if (!product.weight) return true;
 
-      // Extract number from weight string (e.g., "5kg" -> 5)
-      const weightNumber = Number(product.weight.replace(/[^\d.]/g, ""));
+      // Convert weight to number (it's already a number from Firestore)
+      const weightNumber = Number(product.weight);
       if (isNaN(weightNumber)) return true;
 
       const minValue = Number(searchCriteria.weightMin);
@@ -229,8 +229,8 @@ function Products({
 
     const materialTypeMatch =
       !searchCriteria.materialType ||
-      (product.materialType &&
-        product.materialType
+      (product.type &&
+        product.type
           .toLowerCase()
           .includes(searchCriteria.materialType.toLowerCase()));
 
@@ -358,17 +358,17 @@ function Products({
                   <p className="card-text">
                     <strong>價格:</strong> ${product.price}
                     <br />
-                    <strong>庫存:</strong> {product.quantity}
+                    <strong>數量:</strong> {product.quantity}
                     {product.weight && (
                       <>
                         <br />
                         <strong>重量:</strong> {product.weight}
                       </>
                     )}
-                    {product.materialType && (
+                    {product.type && (
                       <>
                         <br />
-                        <strong>建材種類:</strong> {product.materialType}
+                        <strong>建材種類:</strong> {product.type}
                       </>
                     )}
                     {product.location && (

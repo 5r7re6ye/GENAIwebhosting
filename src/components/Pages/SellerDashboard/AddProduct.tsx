@@ -12,14 +12,22 @@ interface AddProductProps {
 
 function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
   const [productName, setProductName] = useState("");
-  const [productPrice, setProductPrice] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
+  const [productWeight, setProductWeight] = useState("");
+  const [productType, setProductType] = useState("");
+  const [productPrice, setProductPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSaveProduct = async () => {
     // Validate inputs
-    if (!productName || !productPrice || !productQuantity) {
+    if (
+      !productName ||
+      !productQuantity ||
+      !productWeight ||
+      !productType ||
+      !productPrice
+    ) {
       setError("請填寫所有欄位");
       return;
     }
@@ -31,8 +39,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
       // Add product to Firestore
       const docRef = await addDoc(collection(db, "products"), {
         name: productName,
-        price: parseFloat(productPrice),
         quantity: parseInt(productQuantity),
+        weight: parseFloat(productWeight),
+        type: productType,
+        price: parseFloat(productPrice),
         sellerId: user?.uid,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -42,8 +52,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
 
       // Reset form and notify success
       setProductName("");
-      setProductPrice("");
       setProductQuantity("");
+      setProductWeight("");
+      setProductType("");
+      setProductPrice("");
       setError("");
 
       // Show success message
@@ -61,92 +73,276 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
 
   const handleCancel = () => {
     setProductName("");
-    setProductPrice("");
     setProductQuantity("");
+    setProductWeight("");
+    setProductType("");
+    setProductPrice("");
     setError("");
     onCancel();
   };
 
   return (
-    <div className="p-4">
-      <h3 className="mb-4">創造請求</h3>
+    <div>
+      <h3
+        style={{
+          color: "#6c757d",
+          fontSize: "24px",
+          fontWeight: "bold",
+          marginBottom: "30px",
+        }}
+      >
+        創造請求
+      </h3>
 
       {error && (
-        <div className="alert alert-danger" role="alert">
+        <div
+          style={{
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+            padding: "12px",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            fontSize: "14px",
+          }}
+        >
           {error}
         </div>
       )}
 
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <form>
-                <div className="mb-3">
-                  <label className="form-label">廢料名稱</label>
-
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    placeholder="請輸入廢料名稱"
-                    disabled={isLoading}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">價格</label>
-                  <div className="input-group">
-                    <span className="input-group-text">$</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={productPrice}
-                      onChange={(e) => setProductPrice(e.target.value)}
-                      placeholder="請輸入價格"
-                      min="0"
-                      step="0.01"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">數量</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={productQuantity}
-                    onChange={(e) => setProductQuantity(e.target.value)}
-                    placeholder="請輸入數量"
-                    min="0"
-                    disabled={isLoading}
-                  />
-                </div>
-
-                <div className="d-flex gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleSaveProduct}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "儲存中..." : "儲存廢料"}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={handleCancel}
-                    disabled={isLoading}
-                  >
-                    取消
-                  </button>
-                </div>
-              </form>
-            </div>
+      <div
+        style={{
+          maxWidth: "600px",
+          backgroundColor: "white",
+          padding: "40px",
+          borderRadius: "20px",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <form>
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              廢料名稱
+            </label>
+            <input
+              type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              placeholder="請輸入廢料名稱"
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            />
           </div>
-        </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              數量
+            </label>
+            <input
+              type="number"
+              value={productQuantity}
+              onChange={(e) => setProductQuantity(e.target.value)}
+              placeholder="請輸入數量"
+              min="0"
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            />
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              重量 (kg)
+            </label>
+            <input
+              type="number"
+              value={productWeight}
+              onChange={(e) => setProductWeight(e.target.value)}
+              placeholder="請輸入重量"
+              min="0"
+              step="0.1"
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            />
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              價格 ($)
+            </label>
+            <input
+              type="number"
+              value={productPrice}
+              onChange={(e) => setProductPrice(e.target.value)}
+              placeholder="請輸入價格"
+              min="0"
+              step="0.01"
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            />
+          </div>
+
+          <div style={{ marginBottom: "30px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                color: "#6c757d",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              種類
+            </label>
+            <select
+              value={productType}
+              onChange={(e) => setProductType(e.target.value)}
+              disabled={isLoading}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                border: "2px solid #e9ecef",
+                borderRadius: "10px",
+                fontSize: "16px",
+                outline: "none",
+                transition: "border-color 0.3s ease",
+                backgroundColor: isLoading ? "#f8f9fa" : "white",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#D59C00")}
+              onBlur={(e) => (e.target.style.borderColor = "#e9ecef")}
+            >
+              <option value="">請選擇建材種類</option>
+              <option value="玻璃">玻璃</option>
+              <option value="金屬">金屬</option>
+              <option value="瀝青">瀝青</option>
+              <option value="煤灰">煤灰</option>
+              <option value="泡沫塑料">泡沫塑料</option>
+              <option value="塑膠">塑膠</option>
+              <option value="碎石骨料">碎石骨料</option>
+              <option value="挖掘料">挖掘料</option>
+              <option value="橡膠">橡膠</option>
+              <option value="公眾填料">公眾填料</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+
+          <div
+            style={{ display: "flex", gap: "15px", justifyContent: "center" }}
+          >
+            <button
+              type="button"
+              onClick={handleSaveProduct}
+              disabled={isLoading}
+              style={{
+                backgroundColor: "#D59C00",
+                color: "white",
+                border: "none",
+                padding: "12px 30px",
+                borderRadius: "25px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+                transition: "all 0.3s ease",
+              }}
+            >
+              {isLoading ? "儲存中..." : "儲存廢料"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={isLoading}
+              style={{
+                backgroundColor: "transparent",
+                color: "#D59C00",
+                border: "2px solid #D59C00",
+                padding: "10px 30px",
+                borderRadius: "25px",
+                fontSize: "16px",
+                fontWeight: "bold",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+                transition: "all 0.3s ease",
+              }}
+            >
+              取消
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
