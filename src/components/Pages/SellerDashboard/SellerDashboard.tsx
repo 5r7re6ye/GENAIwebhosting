@@ -57,6 +57,9 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     userName: string;
   } | null>(null);
 
+  // Selected buyer profile for viewing
+  const [selectedBuyer, setSelectedBuyer] = useState<any>(null);
+
   // AI Chat (overlay) state - no longer used for inline variant
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
 
@@ -828,6 +831,10 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
               setSelectedChatUser({ userId: buyerId, userName: buyerName });
               setSelectedFunction("messages");
             }}
+            onViewBuyer={(buyer) => {
+              setSelectedBuyer(buyer);
+              setSelectedFunction("buyerInfo");
+            }}
           />
         );
 
@@ -885,6 +892,49 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
         return (
           <div className="h-100">
             <AIChat variant="inline" />
+          </div>
+        );
+
+      case "buyerInfo":
+        return (
+          <div className="h-100">
+            {selectedBuyer ? (
+              <div className="card">
+                <div className="card-header d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">買家資料</h5>
+                  <button
+                    className="btn btn-sm btn-outline-secondary"
+                    onClick={() => setSelectedFunction("findBuyers")}
+                  >
+                    返回
+                  </button>
+                </div>
+                <div className="card-body">
+                  <h5 className="card-title">{selectedBuyer.username || "未設定用戶名"}</h5>
+                  <p className="card-text">
+                    <strong>電子郵件:</strong> {selectedBuyer.email}
+                    <br />
+                    {selectedBuyer.phoneNumber && (
+                      <>
+                        <strong>電話號碼:</strong> {selectedBuyer.phoneNumber}
+                        <br />
+                      </>
+                    )}
+                    {selectedBuyer.location && (
+                      <>
+                        <strong>地點:</strong> {selectedBuyer.location}
+                        <br />
+                      </>
+                    )}
+                    <strong>註冊時間:</strong> {selectedBuyer.createdAt
+                      ? new Date(selectedBuyer.createdAt.seconds * 1000).toLocaleDateString("zh-TW")
+                      : "未知"}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-muted">未選擇買家</div>
+            )}
           </div>
         );
 

@@ -11,9 +11,10 @@ import { db } from "../../../firebase/config";
 interface FindBuyersProps {
   user: any;
   onContactBuyer?: (buyerId: string, buyerName: string) => void;
+  onViewBuyer?: (buyer: any) => void;
 }
 
-function FindBuyers({ user, onContactBuyer }: FindBuyersProps) {
+function FindBuyers({ user, onContactBuyer, onViewBuyer }: FindBuyersProps) {
   const [allBuyers, setAllBuyers] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCriteria, setSearchCriteria] = useState({
@@ -201,8 +202,11 @@ function FindBuyers({ user, onContactBuyer }: FindBuyersProps) {
                     <button
                       className="btn btn-outline-info btn-sm"
                       onClick={() => {
-                        // Future: View buyer profile
-                        alert(`查看買家資料: ${buyer.username || buyer.email}`);
+                        if (onViewBuyer) {
+                          onViewBuyer(buyer);
+                        } else {
+                          alert(`查看買家資料: ${buyer.username || buyer.email}`);
+                        }
                       }}
                     >
                       查看資料

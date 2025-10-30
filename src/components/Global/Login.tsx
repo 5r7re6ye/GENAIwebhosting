@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import GHeader from "./Header";
+import HomeBg from "../../assets/Homebackground.jpg";
 
 interface LoginProps {
   onLoginSuccess: (userType: string) => void;
@@ -134,8 +135,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
   return (
     <div
       style={{
-        backgroundImage:
-          "linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/GENAI-webhosting/Homebackground.jpg')",
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
