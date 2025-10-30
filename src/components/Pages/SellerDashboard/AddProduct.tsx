@@ -22,6 +22,61 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Roboflow config via Vite env (optional)
+  const apiUrl = (import.meta as any).env.VITE_ROBOFLOW_API_URL as
+    | string
+    | undefined;
+  const modelId = (import.meta as any).env.VITE_ROBOFLOW_MODEL_ID as
+    | string
+    | undefined;
+  const apiKey = (import.meta as any).env.VITE_ROBOFLOW_API_KEY as
+    | string
+    | undefined;
+
+  const mapLabelToType = (label: string): string => {
+    const mapping: Record<string, string> = {
+      glass: "玻璃",
+      public_fill: "公眾填料",
+      metal: "金屬",
+      asphalt: "瀝青",
+      pulverized_fue_ash: "煤灰",
+      expanded_polystyrene: "泡沫塑料",
+      plastic: "塑膠",
+      aggregate: "碎石骨料",
+      excavated_materials: "挖掘料",
+      rubber: "橡膠",
+    };
+    return mapping[label] || label;
+  };
+
+  const generateDescription = (label: string): string => {
+    const chinese = mapLabelToType(label);
+    return `AI 建議類型：${chinese}。此為自動辨識結果，請確認或修改。`;
+  };
+
+  const classifyImageBase64 = async (base64: string) => {
+    try {
+      if (!apiUrl || !modelId || !apiKey) return;
+      const url = `${apiUrl.replace(/\/$/, "")}/${modelId}`;
+      const res = await fetch(`${url}?api_key=${encodeURIComponent(apiKey)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const preds = (data && (data.predictions || data.top)) || [];
+      const top: any = Array.isArray(preds) ? preds[0] : undefined;
+      const label = top?.class || top?.label || top?.category;
+      if (label) {
+        setProductType(mapLabelToType(label));
+        if (!productDescription) setProductDescription(generateDescription(label));
+      }
+    } catch (e) {
+      console.warn("Classification failed:", e);
+    }
+  };
+
   const handleSaveProduct = async () => {
     // Validate inputs
     if (
@@ -228,8 +283,11 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 if (file) {
                   setImageFile(file);
                   const reader = new FileReader();
-                  reader.onload = () =>
-                    setImagePreview(reader.result as string);
+                  reader.onload = async () => {
+                    const result = reader.result as string;
+                    setImagePreview(result);
+                    await classifyImageBase64(result);
+                  };
                   reader.readAsDataURL(file);
                 } else {
                   setImageFile(null);
