@@ -57,7 +57,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
     userName: string;
   } | null>(null);
 
-  // AI Chat state
+  // AI Chat (overlay) state - no longer used for inline variant
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
 
   // Fetch products for the current seller
@@ -883,19 +883,8 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
       case "aiChat":
         return (
-          <div className="d-flex align-items-center justify-content-center h-100">
-            <div className="text-center">
-              <i className="fas fa-robot fa-4x text-primary mb-3"></i>
-              <h3>AI 助手</h3>
-              <p className="text-muted mb-4">點擊下方按鈕開始與 AI 助手對話</p>
-              <button
-                className="btn btn-primary btn-lg"
-                onClick={() => setIsAIChatOpen(true)}
-              >
-                <i className="fas fa-comments me-2"></i>
-                開始對話
-              </button>
-            </div>
+          <div className="h-100">
+            <AIChat variant="inline" />
           </div>
         );
 
@@ -1040,8 +1029,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
         </div>
       </div>
 
-      {/* AI Chat Component */}
-      <AIChat isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+      {/* Overlay AI Chat removed in favor of inline variant above */}
     </div>
   );
 }

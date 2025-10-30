@@ -24,6 +24,15 @@
   overflow: hidden;
 }
 
+/* Inline variant: full width panel inside main content */
+.ai-chat-inline {
+  max-width: none;
+  height: calc(100% - 0px);
+  max-height: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e9ecef;
+}
+
 .ai-chat-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;

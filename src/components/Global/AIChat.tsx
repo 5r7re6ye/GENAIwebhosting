@@ -10,11 +10,12 @@ interface Message {
 }
 
 interface AIChatProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean; // used for overlay variant
+  onClose?: () => void; // used for overlay variant
+  variant?: "overlay" | "inline";
 }
 
-function AIChat({ isOpen, onClose }: AIChatProps) {
+function AIChat({ isOpen = false, onClose, variant = "overlay" }: AIChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +32,7 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
 
   // Initialize with welcome message
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if ((variant === "inline" || isOpen) && messages.length === 0) {
       const welcomeMessage: Message = {
         id: "welcome",
         content: "你好！我是你的AI助手，有什麼可以幫助你的嗎？",
@@ -40,7 +41,7 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
       };
       setMessages([welcomeMessage]);
     }
-  }, [isOpen, messages.length]);
+  }, [isOpen, variant, messages.length]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -184,6 +185,93 @@ function AIChat({ isOpen, onClose }: AIChatProps) {
   const clearChat = () => {
     setMessages([]);
   };
+
+  // Inline variant: render within page (like Messages UI)
+  if (variant === "inline") {
+    return (
+      <div className="ai-chat-container ai-chat-inline">
+        {/* Header */}
+        <div className="ai-chat-header">
+          <div className="d-flex align-items-center">
+            <div className="ai-avatar me-2">
+              <i className="fas fa-robot"></i>
+            </div>
+            <div>
+              <h5 className="mb-0">AI 助手</h5>
+              <small className="text-muted">線上</small>
+            </div>
+          </div>
+          <div className="ai-chat-controls">
+            <button
+              className="btn btn-sm btn-outline-secondary me-2"
+              onClick={clearChat}
+              title="清除對話"
+            >
+              <i className="fas fa-trash"></i>
+              <span className="ms-1">clear</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="ai-chat-messages">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`ai-message ${message.isUser ? "user" : "ai"} ${
+                message.isLoading ? "loading" : ""
+              }`}
+            >
+              <div className="ai-message-content">
+                {message.isLoading ? (
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                ) : (
+                  <div className="message-text">{message.content}</div>
+                )}
+                <small className="message-time">
+                  {formatTimestamp(message.timestamp)}
+                </small>
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <div className="ai-chat-input">
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="輸入你的問題..."
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={isLoading}
+            />
+            <button
+              className="btn btn-primary"
+              onClick={handleSendMessage}
+              disabled={isLoading || !inputMessage.trim()}
+            >
+              {isLoading ? (
+                <i className="fas fa-spinner fa-spin"></i>
+              ) : (
+                <>
+                  <i className="fas fa-paper-plane"></i>
+                  <span className="ms-1">send</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isOpen) return null;
 
