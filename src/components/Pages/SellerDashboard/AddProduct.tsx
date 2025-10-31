@@ -226,9 +226,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
       <h3
         style={{
           color: "#6c757d",
-          fontSize: "24px",
+          fontSize: window.innerWidth <= 768 ? "18px" : "24px",
           fontWeight: "bold",
-          marginBottom: "30px",
+          marginBottom: window.innerWidth <= 768 ? "16px" : "30px",
         }}
       >
         創造請求
@@ -251,9 +251,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
 
       <div
         style={{
-          maxWidth: "1200px",
+          maxWidth: window.innerWidth <= 768 ? "100%" : "1200px",
           backgroundColor: "white",
-          padding: "40px",
+          padding: window.innerWidth <= 768 ? "16px" : "40px",
           borderRadius: "20px",
           boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
         }}
@@ -262,19 +262,19 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
           <div
             style={{
               display: "flex",
-              gap: "40px",
+              gap: window.innerWidth <= 768 ? "16px" : "40px",
               flexWrap: "wrap",
             }}
           >
             {/* Left Column: Form Fields */}
-            <div style={{ flex: "1", minWidth: "400px" }}>
-              <div style={{ marginBottom: "20px" }}>
+            <div style={{ flex: "1", minWidth: window.innerWidth <= 768 ? "100%" : "400px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -288,10 +288,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                    padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                     border: "2px solid #e9ecef",
                     borderRadius: "10px",
-                    fontSize: "16px",
+                    fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
                     backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -302,13 +302,13 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
               </div>
 
               {/* Description */}
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -336,13 +336,13 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 />
               </div>
 
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -357,10 +357,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                    padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                     border: "2px solid #e9ecef",
                     borderRadius: "10px",
-                    fontSize: "16px",
+                    fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
                     backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -370,13 +370,13 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 />
               </div>
 
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -392,10 +392,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                    padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                     border: "2px solid #e9ecef",
                     borderRadius: "10px",
-                    fontSize: "16px",
+                    fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
                     backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -405,13 +405,13 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 />
               </div>
 
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -427,10 +427,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                    padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                     border: "2px solid #e9ecef",
                     borderRadius: "10px",
-                    fontSize: "16px",
+                    fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
                     backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -440,13 +440,13 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 />
               </div>
 
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -458,10 +458,10 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                   disabled={isLoading}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
+                    padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                     border: "2px solid #e9ecef",
                     borderRadius: "10px",
-                    fontSize: "16px",
+                    fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                     outline: "none",
                     transition: "border-color 0.3s ease",
                     backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -488,19 +488,20 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
             {/* Right Column: Image Upload */}
             <div
               style={{
-                flex: "0 0 350px",
-                position: "sticky",
-                top: "20px",
+                flex: window.innerWidth <= 768 ? "1 1 100%" : "0 0 350px",
+                position: window.innerWidth <= 768 ? "relative" : "sticky",
+                top: window.innerWidth <= 768 ? "auto" : "20px",
                 alignSelf: "flex-start",
+                minWidth: window.innerWidth <= 768 ? "100%" : "350px",
               }}
             >
-              <div style={{ marginBottom: "20px" }}>
+              <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
                 <label
                   style={{
                     display: "block",
-                    marginBottom: "8px",
+                    marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                     color: "#6c757d",
-                    fontSize: "14px",
+                    fontSize: window.innerWidth <= 768 ? "12px" : "14px",
                     fontWeight: "bold",
                   }}
                 >
@@ -564,9 +565,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
           <div
             style={{
               display: "flex",
-              gap: "15px",
+              gap: window.innerWidth <= 768 ? "10px" : "15px",
               justifyContent: "center",
-              marginTop: "30px",
+              marginTop: window.innerWidth <= 768 ? "16px" : "30px",
             }}
           >
             <button
@@ -577,9 +578,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 backgroundColor: "#D59C00",
                 color: "white",
                 border: "none",
-                padding: "12px 30px",
+                padding: window.innerWidth <= 768 ? "10px 20px" : "12px 30px",
                 borderRadius: "25px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 fontWeight: "bold",
                 cursor: isLoading ? "not-allowed" : "pointer",
                 opacity: isLoading ? 0.7 : 1,
@@ -596,9 +597,9 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
                 backgroundColor: "transparent",
                 color: "#D59C00",
                 border: "2px solid #D59C00",
-                padding: "10px 30px",
+                padding: window.innerWidth <= 768 ? "8px 18px" : "10px 30px",
                 borderRadius: "25px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 fontWeight: "bold",
                 cursor: isLoading ? "not-allowed" : "pointer",
                 opacity: isLoading ? 0.7 : 1,

@@ -808,6 +808,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                 borderRadius: "10px",
                 overflow: "hidden",
                 boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                display: window.innerWidth <= 768 ? "none" : "block",
               }}
             >
               <table
@@ -1039,6 +1040,84 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                   )}
                 </tbody>
               </table>
+              {/* Mobile Card View */}
+              {window.innerWidth <= 768 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {products.length === 0 ? (
+                    <div style={{
+                      textAlign: "center",
+                      color: "#6c757d",
+                      padding: "30px",
+                      fontSize: "14px",
+                    }}>
+                      尚無廢料資料
+                    </div>
+                  ) : (
+                    products.map((product) => (
+                    <div key={product.id} style={{
+                      backgroundColor: "white",
+                      padding: "10px",
+                      borderRadius: "8px",
+                      border: "1px solid #e9ecef",
+                      fontSize: "12px"
+                    }}>
+                      <div style={{ fontWeight: "bold", marginBottom: "6px", fontSize: "13px" }}>
+                        {product.name}
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px", marginBottom: "8px", fontSize: "11px", color: "#6c757d" }}>
+                        <div>數量: {product.quantity}</div>
+                        <div>重量: {product.weight} kg</div>
+                        <div>種類: {product.type}</div>
+                        <div>價格: ${product.price}</div>
+                      </div>
+                      <div style={{ fontSize: "10px", color: "#6c757d", marginBottom: "8px" }}>
+                        {product.createdAt
+                          ? new Date(product.createdAt.seconds * 1000).toLocaleDateString("zh-TW")
+                          : "N/A"}
+                      </div>
+                      <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                        <button
+                          onClick={() => handleEditProduct(product)}
+                          disabled={isLoading}
+                          style={{
+                            backgroundColor: "#D59C00",
+                            color: "white",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "12px",
+                            fontSize: "11px",
+                            fontWeight: "bold",
+                            cursor: isLoading ? "not-allowed" : "pointer",
+                            opacity: isLoading ? 0.7 : 1,
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          編輯
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(product.id, product.name)}
+                          disabled={isLoading}
+                          style={{
+                            backgroundColor: "#dc3545",
+                            color: "white",
+                            border: "none",
+                            padding: "6px 12px",
+                            borderRadius: "12px",
+                            fontSize: "11px",
+                            fontWeight: "bold",
+                            cursor: isLoading ? "not-allowed" : "pointer",
+                            opacity: isLoading ? 0.7 : 1,
+                            transition: "all 0.3s ease",
+                          }}
+                        >
+                          {isLoading ? "刪除中..." : "刪除"}
+                        </button>
+                      </div>
+                    </div>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           </div>
         );
