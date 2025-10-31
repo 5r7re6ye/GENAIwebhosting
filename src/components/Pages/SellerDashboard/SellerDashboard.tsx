@@ -85,33 +85,84 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
 
   const classifyImageBase64 = async (base64: string) => {
     try {
-      if (!apiUrl || !modelId || !apiKey) return;
-      const url = `${apiUrl.replace(/\/$/, "")}/${modelId}`;
-      const res = await fetch(`${url}?api_key=${encodeURIComponent(apiKey)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64 }),
-      });
-      if (!res.ok) return;
-      const data = await res.json();
-      const preds = (data && (data.predictions || data.top)) || [];
-      const top: any = Array.isArray(preds) ? preds[0] : undefined;
-      const label = top?.class || top?.label || top?.category;
-      if (label) {
-        setEditForm((prev) => ({ ...prev, type: mapLabelToType(label) }));
-        if (!prevDescRef.current) {
-          setEditForm((prev) => ({
-            ...prev,
-            description: prev.description || generateDescription(label),
-          }));
-        }
+      if (!apiUrl || !modelId || !apiKey) {
+        console.log("Missing Roboflow config:", { 
+          hasApiUrl: !!apiUrl, 
+          hasModelId: !!modelId, 
+          hasApiKey: !!apiKey 
+        });
+        return;
       }
+      
+      // Strip data URL prefix if present
+      const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
+      const url = `${apiUrl.replace(/\/$/, "")}/${modelId}?api_key=${encodeURIComponent(apiKey)}`;
+      
+      console.log("Calling Roboflow API:", url);
+      
+      // Try form-data format (common for Roboflow)
+      const formData = new FormData();
+      const blob = await fetch(base64).then(r => r.blob());
+      formData.append("file", blob, "image.jpg");
+      
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Roboflow API error:", res.status, errorText);
+        
+        // Fallback: try JSON format with base64
+        try {
+          const jsonRes = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: base64Data }),
+          });
+          if (jsonRes.ok) {
+            const jsonData = await jsonRes.json();
+            return processRoboflowResponse(jsonData);
+          }
+        } catch (e) {
+          console.error("JSON fallback also failed:", e);
+        }
+        return;
+      }
+      
+      const data = await res.json();
+      processRoboflowResponse(data);
     } catch (e) {
-      console.warn("Classification failed:", e);
+      console.error("Classification failed:", e);
     }
   };
-
-  const prevDescRef = useRef(false as any);
+  
+  const processRoboflowResponse = (data: any) => {
+    console.log("Roboflow response:", data);
+    
+    const predictions = data.predictions || [];
+    const top = predictions.length > 0 ? predictions[0] : null;
+    
+    if (top && top.class) {
+      const label = top.class;
+      const confidence = top.confidence || 0;
+      
+      console.log(`Classification result: ${label} (${(confidence * 100).toFixed(1)}%)`);
+      
+      if (confidence >= 0.3) {
+        setEditForm((prev) => {
+          const newForm = { ...prev, type: mapLabelToType(label) };
+          if (!prev.description) {
+            newForm.description = generateDescription(label);
+          }
+          return newForm;
+        });
+      } else {
+        console.log("Confidence too low, ignoring prediction");
+      }
+    }
+  };
 
   // Message-related states
   const [messageView, setMessageView] = useState<"messages" | "findUsers">(
