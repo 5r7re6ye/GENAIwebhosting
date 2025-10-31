@@ -430,7 +430,7 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
       <div
         style={{
           backgroundColor: "white",
-          padding: "20px 40px",
+          padding: window.innerWidth <= 768 ? "12px 16px" : "20px 40px",
           borderBottom: "1px solid #e9ecef",
           display: "flex",
           justifyContent: "space-between",
@@ -440,7 +440,7 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         <h1
           style={{
             color: "#D59C00",
-            fontSize: "32px",
+            fontSize: window.innerWidth <= 768 ? "24px" : "32px",
             fontWeight: "bold",
             margin: 0,
             fontFamily: "sans-serif",
@@ -448,7 +448,7 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         >
           CWRS
         </h1>
-        <div style={{ display: "flex", gap: "30px" }}>
+        <div style={{ display: window.innerWidth <= 768 ? "none" : "flex", gap: "30px" }}>
           <a
             href="#"
             style={{
@@ -484,7 +484,8 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
 
       <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
         {/* Sidebar (desktop/tablet) */}
-        <div className="d-none d-md-flex"
+        <div
+          className="d-none d-md-flex"
           style={{
             width: "250px",
             backgroundColor: "#f1f3f4",
@@ -554,8 +555,8 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         <div
           style={{
             flex: 1,
-            padding: "30px",
-            paddingBottom: "90px",
+            padding: window.innerWidth <= 768 ? "16px" : "30px",
+            paddingBottom: window.innerWidth <= 768 ? "90px" : "30px",
             overflowY: "auto",
             backgroundColor: "#f8f9fa",
           }}
@@ -565,18 +566,21 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
       </div>
 
       {/* Bottom navigation (mobile) */}
-      <div className="d-md-none" style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "#ffffff",
-        borderTop: "1px solid #e9ecef",
-        display: "flex",
-        justifyContent: "space-around",
-        padding: "8px 6px",
-        zIndex: 1000,
-      }}>
+      <div
+        className="d-md-none"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#ffffff",
+          borderTop: "1px solid #e9ecef",
+          display: "flex",
+          justifyContent: "space-around",
+          padding: "8px 6px",
+          zIndex: 1000,
+        }}
+      >
         {buyerMenuItems.map((item) => (
           <button
             key={item.id}

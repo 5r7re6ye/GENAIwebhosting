@@ -135,8 +135,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
   return (
     <div
       style={{
-        backgroundImage:
-          `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -147,7 +146,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
       <div
         style={{
           backgroundColor: "white",
-          padding: "20px 40px",
+          padding: window.innerWidth <= 768 ? "12px 16px" : "20px 40px",
           borderBottom: "1px solid #e9ecef",
           display: "flex",
           justifyContent: "space-between",
@@ -157,7 +156,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
         <h1
           style={{
             color: "#D59C00",
-            fontSize: "32px",
+            fontSize: window.innerWidth <= 768 ? "24px" : "32px",
             fontWeight: "bold",
             margin: 0,
             fontFamily: "sans-serif",
@@ -165,7 +164,7 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
         >
           CWRS
         </h1>
-        <div style={{ display: "flex", gap: "30px" }}>
+        <div style={{ display: window.innerWidth <= 768 ? "none" : "flex", gap: "30px" }}>
           <a
             href="#"
             style={{
@@ -205,15 +204,15 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "calc(100vh - 80px)",
-          padding: "40px",
+          padding: window.innerWidth <= 768 ? "16px" : "40px",
         }}
       >
         <div
           style={{
-            maxWidth: "400px",
+            maxWidth: window.innerWidth <= 768 ? "100%" : "400px",
             width: "100%",
             backgroundColor: "white",
-            padding: "40px",
+            padding: window.innerWidth <= 768 ? "20px" : "40px",
             borderRadius: "20px",
             boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
           }}
@@ -221,9 +220,9 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
           <h2
             style={{
               textAlign: "center",
-              marginBottom: "30px",
+              marginBottom: window.innerWidth <= 768 ? "20px" : "30px",
               color: "#6c757d",
-              fontSize: "24px",
+              fontSize: window.innerWidth <= 768 ? "20px" : "24px",
               fontWeight: "bold",
             }}
           >
@@ -245,13 +244,13 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
             </div>
           )}
 
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
             <label
               style={{
                 display: "block",
-                marginBottom: "8px",
+                marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                 color: "#6c757d",
-                fontSize: "14px",
+                fontSize: window.innerWidth <= 768 ? "13px" : "14px",
                 fontWeight: "bold",
               }}
             >
@@ -265,10 +264,10 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
               disabled={isLoading}
               style={{
                 width: "100%",
-                padding: "12px 16px",
+                padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                 border: "2px solid #e9ecef",
                 borderRadius: "10px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 outline: "none",
                 transition: "border-color 0.3s ease",
                 backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -278,13 +277,13 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
             />
           </div>
 
-          <div style={{ marginBottom: "30px" }}>
+          <div style={{ marginBottom: window.innerWidth <= 768 ? "20px" : "30px" }}>
             <label
               style={{
                 display: "block",
-                marginBottom: "8px",
+                marginBottom: window.innerWidth <= 768 ? "6px" : "8px",
                 color: "#6c757d",
-                fontSize: "14px",
+                fontSize: window.innerWidth <= 768 ? "13px" : "14px",
                 fontWeight: "bold",
               }}
             >
@@ -298,10 +297,10 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
               disabled={isLoading}
               style={{
                 width: "100%",
-                padding: "12px 16px",
+                padding: window.innerWidth <= 768 ? "10px 12px" : "12px 16px",
                 border: "2px solid #e9ecef",
                 borderRadius: "10px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 outline: "none",
                 transition: "border-color 0.3s ease",
                 backgroundColor: isLoading ? "#f8f9fa" : "white",
@@ -319,12 +318,12 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
                 backgroundColor: "#D59C00",
                 color: "white",
                 border: "none",
-                padding: "12px 30px",
+                padding: window.innerWidth <= 768 ? "10px 20px" : "12px 30px",
                 borderRadius: "25px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 fontWeight: "bold",
                 cursor: isLoading ? "not-allowed" : "pointer",
-                marginRight: "15px",
+                marginRight: window.innerWidth <= 768 ? "10px" : "15px",
                 opacity: isLoading ? 0.7 : 1,
                 transition: "all 0.3s ease",
               }}
@@ -338,9 +337,9 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
                 backgroundColor: "transparent",
                 color: "#D59C00",
                 border: "2px solid #D59C00",
-                padding: "10px 30px",
+                padding: window.innerWidth <= 768 ? "8px 18px" : "10px 30px",
                 borderRadius: "25px",
-                fontSize: "16px",
+                fontSize: window.innerWidth <= 768 ? "14px" : "16px",
                 fontWeight: "bold",
                 cursor: isLoading ? "not-allowed" : "pointer",
                 opacity: isLoading ? 0.7 : 1,
