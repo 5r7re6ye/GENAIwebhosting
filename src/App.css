@@ -1,0 +1,18 @@
+/* Hide reCAPTCHA badge (bottom right corner) */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  display: none !important;
+}
+
+/* Alternative: Keep it but make it less intrusive
+.grecaptcha-badge {
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.grecaptcha-badge:hover {
+  opacity: 1;
+}
+*/
+
