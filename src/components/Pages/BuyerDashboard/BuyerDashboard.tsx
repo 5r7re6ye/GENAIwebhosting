@@ -448,7 +448,12 @@ function BuyerDashboard({ user, onLogout }: BuyerDashboardProps) {
         >
           CWRS
         </h1>
-        <div style={{ display: window.innerWidth <= 768 ? "none" : "flex", gap: "30px" }}>
+        <div
+          style={{
+            display: window.innerWidth <= 768 ? "none" : "flex",
+            gap: "30px",
+          }}
+        >
           <a
             href="#"
             style={{

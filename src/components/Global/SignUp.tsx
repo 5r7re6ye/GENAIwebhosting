@@ -3,7 +3,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import GHeader from "./Header";
-import HomeBg from "../../assets/Homebackground.jpg";
 
 interface SignUpProps {
   onBackToLogin: () => void;
@@ -67,7 +66,8 @@ function SignUp({ onBackToLogin, onSignUpSuccess }: SignUpProps) {
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url(${HomeBg})`,
+        backgroundImage:
+          "linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('/GENAI-webhosting/Homebackground.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

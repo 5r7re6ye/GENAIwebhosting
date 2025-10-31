@@ -3,13 +3,51 @@ interface OrdersProps {
 }
 
 function Orders({ orders }: OrdersProps) {
+  const isMobile = window.innerWidth <= 768;
+  
   return (
-    <div className="p-4">
-      <h3 className="mb-4">我的訂單</h3>
+    <div className="p-4" style={{ padding: isMobile ? "12px" : "24px" }}>
+      <h3 className="mb-4" style={{ fontSize: isMobile ? "18px" : "24px", marginBottom: isMobile ? "12px" : "24px" }}>
+        我的訂單
+      </h3>
 
       {orders.length === 0 ? (
         <div className="text-center text-muted">
           <p>尚無訂單記錄</p>
+        </div>
+      ) : isMobile ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          {orders.map((order) => (
+            <div key={order.id} style={{ 
+              backgroundColor: "white", 
+              padding: "10px", 
+              borderRadius: "8px",
+              border: "1px solid #e9ecef",
+              fontSize: "12px"
+            }}>
+              <div style={{ fontWeight: "bold", marginBottom: "6px" }}>
+                {order.orderNumber || order.id}
+              </div>
+              <div style={{ marginBottom: "4px", fontSize: "11px", color: "#6c757d" }}>
+                {order.items.map((item: any, idx: number) => (
+                  <div key={idx}>{item.name} x{item.quantity} - ${item.price}</div>
+                ))}
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "6px" }}>
+                <span style={{ fontWeight: "bold" }}>${order.totalAmount.toFixed(2)}</span>
+                <span className={`badge ${order.status === "pending" ? "bg-warning" : "bg-success"}`} style={{ fontSize: "10px" }}>
+                  {order.status === "pending" ? "等待確認" : "已確認"}
+                </span>
+              </div>
+              <div style={{ fontSize: "10px", color: "#6c757d", marginTop: "4px" }}>
+                {order.createdAt
+                  ? order.createdAt.toDate
+                    ? order.createdAt.toDate().toLocaleDateString("zh-TW")
+                    : new Date(order.createdAt.seconds * 1000).toLocaleDateString("zh-TW")
+                  : "未知"}
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="table-responsive">

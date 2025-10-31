@@ -65,7 +65,7 @@ function FindUsers({ user, userType, onStartChat }: FindUsersProps) {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 find-users-container">
       <h3 className="mb-4">{userType === "buyer" ? "尋找賣家" : "尋找買家"}</h3>
 
       {/* Search Input */}

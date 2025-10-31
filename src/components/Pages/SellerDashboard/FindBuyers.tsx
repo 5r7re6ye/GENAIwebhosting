@@ -96,7 +96,7 @@ function FindBuyers({ user, onContactBuyer, onViewBuyer }: FindBuyersProps) {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 find-buyers-container">
       <h3 className="mb-4">尋找買家</h3>
 
       {/* Search Form */}
@@ -205,7 +205,9 @@ function FindBuyers({ user, onContactBuyer, onViewBuyer }: FindBuyersProps) {
                         if (onViewBuyer) {
                           onViewBuyer(buyer);
                         } else {
-                          alert(`查看買家資料: ${buyer.username || buyer.email}`);
+                          alert(
+                            `查看買家資料: ${buyer.username || buyer.email}`
+                          );
                         }
                       }}
                     >

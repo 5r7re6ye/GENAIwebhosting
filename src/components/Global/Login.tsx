@@ -164,7 +164,12 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
         >
           CWRS
         </h1>
-        <div style={{ display: window.innerWidth <= 768 ? "none" : "flex", gap: "30px" }}>
+        <div
+          style={{
+            display: window.innerWidth <= 768 ? "none" : "flex",
+            gap: "30px",
+          }}
+        >
           <a
             href="#"
             style={{
@@ -244,7 +249,9 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
             </div>
           )}
 
-          <div style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}>
+          <div
+            style={{ marginBottom: window.innerWidth <= 768 ? "12px" : "20px" }}
+          >
             <label
               style={{
                 display: "block",
@@ -277,7 +284,9 @@ function Login({ onLoginSuccess, onSignUpClick }: LoginProps) {
             />
           </div>
 
-          <div style={{ marginBottom: window.innerWidth <= 768 ? "20px" : "30px" }}>
+          <div
+            style={{ marginBottom: window.innerWidth <= 768 ? "20px" : "30px" }}
+          >
             <label
               style={{
                 display: "block",

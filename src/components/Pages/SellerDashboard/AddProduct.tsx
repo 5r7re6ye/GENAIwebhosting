@@ -486,7 +486,14 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
             </div>
 
             {/* Right Column: Image Upload */}
-            <div style={{ flex: "0 0 350px", position: "sticky", top: "20px", alignSelf: "flex-start" }}>
+            <div
+              style={{
+                flex: "0 0 350px",
+                position: "sticky",
+                top: "20px",
+                alignSelf: "flex-start",
+              }}
+            >
               <div style={{ marginBottom: "20px" }}>
                 <label
                   style={{
@@ -555,7 +562,12 @@ function AddProduct({ user, onSuccess, onCancel }: AddProductProps) {
 
           {/* Buttons at bottom */}
           <div
-            style={{ display: "flex", gap: "15px", justifyContent: "center", marginTop: "30px" }}
+            style={{
+              display: "flex",
+              gap: "15px",
+              justifyContent: "center",
+              marginTop: "30px",
+            }}
           >
             <button
               type="button"

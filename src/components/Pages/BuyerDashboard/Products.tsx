@@ -254,7 +254,7 @@ function Products({
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 products-container">
       <h3 className="mb-4">待回收廢料</h3>
 
       {/* Search Form */}

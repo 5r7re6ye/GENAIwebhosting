@@ -60,28 +60,30 @@ function ProductDetail({
     }
   };
 
+  const isMobile = window.innerWidth <= 768;
+  
   return (
-    <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="mb-0">商品詳情</h3>
-        <button className="btn btn-secondary" onClick={onBackToProducts}>
-          返回待回收廢料
+    <div className="p-4" style={{ padding: isMobile ? "12px" : "24px" }}>
+      <div className="d-flex justify-content-between align-items-center mb-4" style={{ marginBottom: isMobile ? "12px" : "24px" }}>
+        <h3 className="mb-0" style={{ fontSize: isMobile ? "18px" : "24px" }}>商品詳情</h3>
+        <button className="btn btn-secondary" onClick={onBackToProducts} style={{ padding: isMobile ? "6px 12px" : "8px 16px", fontSize: isMobile ? "12px" : "14px" }}>
+          返回
         </button>
       </div>
 
       {product ? (
-        <div className="row">
+        <div className={isMobile ? "" : "row"}>
           {/* Product Image */}
-          <div className="col-md-6 mb-4">
-            <div className="card">
-              <div className="card-body text-center">
+          <div className={isMobile ? "mb-3" : "col-md-6 mb-4"}>
+            <div className="card" style={{ padding: isMobile ? "8px" : "16px" }}>
+              <div className="card-body text-center" style={{ padding: isMobile ? "8px" : "16px" }}>
                 {product.photoURL ? (
                   <img
                     src={product.photoURL}
                     alt={product.name}
                     style={{
                       maxWidth: "100%",
-                      maxHeight: "300px",
+                      maxHeight: isMobile ? "150px" : "300px",
                       borderRadius: "8px",
                       objectFit: "cover",
                     }}
@@ -89,9 +91,9 @@ function ProductDetail({
                 ) : (
                   <div
                     className="bg-light d-flex align-items-center justify-content-center"
-                    style={{ height: "300px", borderRadius: "8px" }}
+                    style={{ height: isMobile ? "150px" : "300px", borderRadius: "8px" }}
                   >
-                    <i className="fas fa-image fa-3x text-muted"></i>
+                    <i className={`fas fa-image ${isMobile ? "fa-2x" : "fa-3x"} text-muted`}></i>
                   </div>
                 )}
               </div>
@@ -99,28 +101,29 @@ function ProductDetail({
           </div>
 
           {/* Product Information */}
-          <div className="col-md-6">
-            <div className="card">
-              <div className="card-body">
-                <h2 className="card-title mb-3">{product.name}</h2>
+          <div className={isMobile ? "" : "col-md-6"}>
+            <div className="card" style={{ padding: isMobile ? "8px" : "16px" }}>
+              <div className="card-body" style={{ padding: isMobile ? "8px" : "16px" }}>
+                <h2 className="card-title mb-3" style={{ fontSize: isMobile ? "18px" : "24px", marginBottom: isMobile ? "8px" : "16px" }}>{product.name}</h2>
 
-                <div className="mb-3">
-                  <h4 className="text-primary">${product.price}</h4>
+                <div className="mb-3" style={{ marginBottom: isMobile ? "8px" : "16px" }}>
+                  <h4 className="text-primary" style={{ fontSize: isMobile ? "20px" : "28px", margin: 0 }}>${product.price}</h4>
                 </div>
 
                 {product.description && (
-                  <div className="mb-3">
-                    <h5>商品描述</h5>
-                    <p className="text-muted">{product.description}</p>
+                  <div className="mb-3" style={{ marginBottom: isMobile ? "8px" : "16px" }}>
+                    <h5 style={{ fontSize: isMobile ? "13px" : "16px", marginBottom: isMobile ? "4px" : "8px" }}>商品描述</h5>
+                    <p className="text-muted" style={{ fontSize: isMobile ? "12px" : "14px", margin: 0 }}>{product.description}</p>
                   </div>
                 )}
 
-                <div className="mb-3">
-                  <h5>數量狀況</h5>
+                <div className="mb-3" style={{ marginBottom: isMobile ? "8px" : "16px" }}>
+                  <h5 style={{ fontSize: isMobile ? "13px" : "16px", marginBottom: isMobile ? "4px" : "8px" }}>數量狀況</h5>
                   <span
                     className={`badge ${
                       product.quantity > 0 ? "bg-success" : "bg-danger"
                     }`}
+                    style={{ fontSize: isMobile ? "11px" : "14px" }}
                   >
                     {product.quantity > 0
                       ? `數量 ${product.quantity} 個`

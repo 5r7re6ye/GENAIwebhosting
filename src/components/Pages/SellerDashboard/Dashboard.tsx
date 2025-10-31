@@ -102,36 +102,38 @@ function Dashboard({ user }: DashboardProps) {
     );
   }
 
+  const isMobile = window.innerWidth <= 768;
+  
   return (
-    <div>
+    <div style={{ padding: isMobile ? "12px" : "0" }}>
       {/* Summary Cards */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "20px",
-          marginBottom: "40px",
+          gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+          gap: isMobile ? "8px" : "20px",
+          marginBottom: isMobile ? "16px" : "40px",
         }}
       >
         <div
           style={{
             backgroundColor: "#D59C00",
-            borderRadius: "20px",
-            padding: "25px",
+            borderRadius: isMobile ? "12px" : "20px",
+            padding: isMobile ? "12px" : "25px",
             color: "white",
             textAlign: "center",
           }}
         >
           <h4
             style={{
-              margin: "0 0 15px 0",
-              fontSize: "16px",
+              margin: "0 0 8px 0",
+              fontSize: isMobile ? "11px" : "16px",
               fontWeight: "normal",
             }}
           >
             待回收廢料
           </h4>
-          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+          <h1 style={{ margin: 0, fontSize: isMobile ? "28px" : "48px", fontWeight: "bold" }}>
             {stats.totalProducts}
           </h1>
         </div>
@@ -139,22 +141,22 @@ function Dashboard({ user }: DashboardProps) {
         <div
           style={{
             backgroundColor: "#D59C00",
-            borderRadius: "20px",
-            padding: "25px",
+            borderRadius: isMobile ? "12px" : "20px",
+            padding: isMobile ? "12px" : "25px",
             color: "white",
             textAlign: "center",
           }}
         >
           <h4
             style={{
-              margin: "0 0 15px 0",
-              fontSize: "16px",
+              margin: "0 0 8px 0",
+              fontSize: isMobile ? "11px" : "16px",
               fontWeight: "normal",
             }}
           >
             回收確認中
           </h4>
-          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+          <h1 style={{ margin: 0, fontSize: isMobile ? "28px" : "48px", fontWeight: "bold" }}>
             {stats.pendingOrders}
           </h1>
         </div>
@@ -162,22 +164,22 @@ function Dashboard({ user }: DashboardProps) {
         <div
           style={{
             backgroundColor: "#D59C00",
-            borderRadius: "20px",
-            padding: "25px",
+            borderRadius: isMobile ? "12px" : "20px",
+            padding: isMobile ? "12px" : "25px",
             color: "white",
             textAlign: "center",
           }}
         >
           <h4
             style={{
-              margin: "0 0 15px 0",
-              fontSize: "16px",
+              margin: "0 0 8px 0",
+              fontSize: isMobile ? "11px" : "16px",
               fontWeight: "normal",
             }}
           >
             廢料處理中
           </h4>
-          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+          <h1 style={{ margin: 0, fontSize: isMobile ? "28px" : "48px", fontWeight: "bold" }}>
             {stats.confirmedOrders}
           </h1>
         </div>
@@ -185,22 +187,22 @@ function Dashboard({ user }: DashboardProps) {
         <div
           style={{
             backgroundColor: "#D59C00",
-            borderRadius: "20px",
-            padding: "25px",
+            borderRadius: isMobile ? "12px" : "20px",
+            padding: isMobile ? "12px" : "25px",
             color: "white",
             textAlign: "center",
           }}
         >
           <h4
             style={{
-              margin: "0 0 15px 0",
-              fontSize: "16px",
+              margin: "0 0 8px 0",
+              fontSize: isMobile ? "11px" : "16px",
               fontWeight: "normal",
             }}
           >
             總收入
           </h4>
-          <h1 style={{ margin: 0, fontSize: "48px", fontWeight: "bold" }}>
+          <h1 style={{ margin: 0, fontSize: isMobile ? "28px" : "48px", fontWeight: "bold" }}>
             ${stats.totalRevenue.toFixed(0)}
           </h1>
         </div>
@@ -211,9 +213,9 @@ function Dashboard({ user }: DashboardProps) {
         <h3
           style={{
             color: "#6c757d",
-            fontSize: "20px",
+            fontSize: isMobile ? "16px" : "20px",
             fontWeight: "bold",
-            marginBottom: "20px",
+            marginBottom: isMobile ? "12px" : "20px",
           }}
         >
           最近回收訂單
@@ -224,12 +226,53 @@ function Dashboard({ user }: DashboardProps) {
             style={{
               color: "#6c757d",
               textAlign: "center",
-              fontSize: "16px",
-              padding: "40px",
+              fontSize: isMobile ? "12px" : "16px",
+              padding: isMobile ? "20px" : "40px",
             }}
           >
             尚無訂單記錄
           </p>
+        ) : isMobile ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {recentOrders.map((order) => (
+              <div key={order.id} style={{
+                backgroundColor: "white",
+                padding: "10px",
+                borderRadius: "8px",
+                border: "1px solid #e9ecef",
+                fontSize: "11px"
+              }}>
+                <div style={{ fontWeight: "bold", marginBottom: "6px", fontSize: "12px" }}>
+                  {order.orderNumber || `#${order.id.slice(-8)}`}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+                  <span>{order.buyerName || "Buyertester"}</span>
+                  <span style={{ fontWeight: "bold" }}>${order.totalAmount?.toFixed(0) || "10"}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: "10px", color: "#6c757d" }}>
+                    {order.createdAt
+                      ? order.createdAt.toDate
+                        ? order.createdAt.toDate().toLocaleDateString("zh-TW")
+                        : new Date(order.createdAt.seconds * 1000).toLocaleDateString("zh-TW")
+                      : "2025/10/20"}
+                  </span>
+                  <span
+                    style={{
+                      backgroundColor: order.status === "confirmed" ? "#28a745" : "#ffc107",
+                      color: "white",
+                      padding: "2px 8px",
+                      borderRadius: "10px",
+                      fontSize: "10px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {order.status === "confirmed" ? "已確認" : "待確認"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div
             style={{
