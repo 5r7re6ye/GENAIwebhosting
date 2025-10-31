@@ -802,13 +802,14 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
               </div>
             )}
 
+            {/* Desktop Table View */}
             <div
+              className="d-none d-md-block"
               style={{
                 backgroundColor: "white",
                 borderRadius: "10px",
                 overflow: "hidden",
                 boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-                display: window.innerWidth <= 768 ? "none" : "block",
               }}
             >
               <table
@@ -1040,20 +1041,24 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                   )}
                 </tbody>
               </table>
-              {/* Mobile Card View */}
-              {window.innerWidth <= 768 && (
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="d-md-none">
+              {products.length === 0 ? (
+                <div style={{
+                  textAlign: "center",
+                  color: "#6c757d",
+                  padding: "30px",
+                  fontSize: "14px",
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                }}>
+                  尚無廢料資料
+                </div>
+              ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {products.length === 0 ? (
-                    <div style={{
-                      textAlign: "center",
-                      color: "#6c757d",
-                      padding: "30px",
-                      fontSize: "14px",
-                    }}>
-                      尚無廢料資料
-                    </div>
-                  ) : (
-                    products.map((product) => (
+                  {products.map((product) => (
                     <div key={product.id} style={{
                       backgroundColor: "white",
                       padding: "10px",
@@ -1114,8 +1119,7 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
                         </button>
                       </div>
                     </div>
-                    ))
-                  )}
+                  ))}
                 </div>
               )}
             </div>
