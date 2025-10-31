@@ -32,6 +32,11 @@ jobs:
 
       - name: Build
         # Set base to repo name for project pages
+        # Pass environment variables from GitHub Secrets
+        env:
+          VITE_ROBOFLOW_API_URL: ${{ secrets.VITE_ROBOFLOW_API_URL }}
+          VITE_ROBOFLOW_MODEL_ID: ${{ secrets.VITE_ROBOFLOW_MODEL_ID }}
+          VITE_ROBOFLOW_API_KEY: ${{ secrets.VITE_ROBOFLOW_API_KEY }}
         run: |
           npm run build -- --base=/GENAIwebhosting/
 
