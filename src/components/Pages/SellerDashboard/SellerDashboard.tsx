@@ -1250,13 +1250,12 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
       </div>
 
       <div style={{ display: "flex", height: "calc(100vh - 80px)" }}>
-        {/* Sidebar */}
-        <div
+        {/* Sidebar (desktop/tablet) */}
+        <div className="d-none d-md-flex"
           style={{
             width: "250px",
             backgroundColor: "#f1f3f4",
             padding: "20px 0",
-            display: "flex",
             flexDirection: "column",
           }}
         >
@@ -1308,12 +1307,46 @@ function SellerDashboard({ user, onLogout }: SellerDashboardProps) {
           style={{
             flex: 1,
             padding: "30px",
+            paddingBottom: "90px",
             overflowY: "auto",
             backgroundColor: "#f8f9fa",
           }}
         >
           {renderMainPanel()}
         </div>
+      </div>
+
+      {/* Bottom navigation (mobile) */}
+      <div className="d-md-none" style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "#ffffff",
+        borderTop: "1px solid #e9ecef",
+        display: "flex",
+        justifyContent: "space-around",
+        padding: "8px 6px",
+        zIndex: 1000,
+      }}>
+        {sellerMenuItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setSelectedFunction(item.id)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: selectedFunction === item.id ? "#D59C00" : "#6c757d",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              fontSize: "12px",
+            }}
+          >
+            <i className={`${item.icon}`} style={{ fontSize: "18px" }}></i>
+            <span style={{ marginTop: 4 }}>{item.label}</span>
+          </button>
+        ))}
       </div>
 
       {/* Overlay AI Chat removed in favor of inline variant above */}
